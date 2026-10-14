@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UA/UC Report – EcoOils Mentari</title>
+<meta name="robots" content="noindex,nofollow">
+<style>
+:root{--bg:#0b1626;--panel:#122238;--panel2:#18304d;--line:#27425f;--text:#eaf0f7;--mute:#93a6bd;--amber:#f5a623;--amber2:#ffc861;--ok:#3ecf8e;--bad:#ff6b6b;--r:12px}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:3px solid var(--amber);background:var(--panel)}
+.brand b{display:block;font-size:17px;letter-spacing:.2px}
+.brand span{font-size:13px;color:var(--mute)}
+.lang{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.lang button{background:none;border:0;color:var(--mute);padding:6px 12px;font:inherit;font-size:13px;cursor:pointer}
+.lang button.on{background:var(--amber);color:#1a1200;font-weight:700}
+main{max-width:640px;margin:0 auto;padding:18px 16px 40px}
+h1{font-size:22px;margin:4px 0 4px}
+.sub{color:var(--mute);margin:0 0 18px;font-size:14px}
+label{display:block;font-weight:600;font-size:14px;margin:16px 0 6px}
+label i{font-style:normal;color:var(--mute);font-weight:400}
+input,select,textarea{width:100%;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:var(--r);padding:12px;font:inherit}
+textarea{min-height:96px;resize:vertical}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--amber2);outline-offset:1px}
+.seg{display:grid;gap:8px}
+.seg label{margin:0;display:flex;gap:10px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:11px 12px;font-weight:500;cursor:pointer}
+.seg input{width:auto;accent-color:var(--amber)}
+.seg label:has(input:checked){border-color:var(--amber);background:var(--panel2)}
+.err{color:var(--bad);font-size:13px;min-height:0;margin-top:4px}
+.btn{display:block;width:100%;margin-top:22px;background:var(--amber);color:#1a1200;border:0;border-radius:var(--r);padding:14px;font:inherit;font-weight:700;cursor:pointer}
+.btn:disabled{opacity:.6}
+.btn.ghost{background:none;color:var(--text);border:1px solid var(--line);margin-top:10px}
+.note{margin-top:14px;font-size:13px;color:var(--mute)}
+.banner{border-radius:var(--r);padding:12px 14px;margin:0 0 14px;font-size:14px}
+.banner.ok{background:#12372b;border:1px solid var(--ok)}
+.banner.warn{background:#3b2f10;border:1px solid var(--amber)}
+.hidden{display:none!important}
+footer{text-align:center;color:var(--mute);font-size:12px;padding:18px}
+.modal{position:fixed;inset:0;background:rgba(3,8,16,.78);display:flex;align-items:center;justify-content:center;padding:16px;z-index:10}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;width:100%;max-width:380px}
+.card h2{margin:0 0 4px;font-size:19px}
+.admin-bar{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.admin-bar button{width:auto;margin:0;padding:8px 14px}
+.tile{background:var(--panel);border:1px dashed var(--line);border-radius:var(--r);padding:16px;margin-top:14px;color:var(--mute)}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><b>EcoOils Mentari</b><span data-t="tagline">A commitment to look out for one another</span></div>
+  <div class="lang" role="group" aria-label="Language"><button id="lEN" class="on" type="button">EN</button><button id="lID" type="button">BI</button></div>
+</header>
+
+<main>
+  <!-- CREW VIEW -->
+  <section id="crew">
+    <h1 data-t="title">Report an unsafe act or condition</h1>
+    <p class="sub" data-t="sub">Takes about a minute. Report what you see, even if it is small.</p>
+    <div id="notice"></div>
+    <form id="f" novalidate autocomplete="off">
+      <label for="date" data-t="date">Date</label>
+      <input type="date" id="date" required><div class="err" data-e="date"></div>
+
+      <label for="contractor" data-t="contractor">Contractor</label>
+      <select id="contractor" required></select><div class="err" data-e="contractor"></div>
+
+      <label for="name" data-t="name">Your name</label>
+      <input id="name" maxlength="80" required><div class="err" data-e="name"></div>
+
+      <label for="location" data-t="location">Location</label>
+      <select id="location" required></select>
+      <input id="locationOther" class="hidden" maxlength="80" style="margin-top:8px" data-ph="locOther">
+      <div class="err" data-e="location"></div>
+
+      <label data-t="type">Report type</label>
+      <div class="seg" id="type"></div><div class="err" data-e="type"></div>
+
+      <label for="desc" data-t="desc">What did you see?</label>
+      <textarea id="desc" maxlength="1500" required></textarea><div class="err" data-e="desc"></div>
+
+      <label for="rec"><span data-t="rec">Recommendation or action taken</span> <i data-t="optional">(optional)</i></label>
+      <textarea id="rec" maxlength="1500"></textarea>
+
+      <label for="risk"><span data-t="risk">Critical risk control category</span> <i data-t="optional">(optional)</i></label>
+      <select id="risk"></select>
+
+      <label data-t="status">Status</label>
+      <div class="seg" id="status"></div><div class="err" data-e="status"></div>
+
+      <button class="btn" id="send" type="submit" data-t="send">Send report</button>
+    </form>
+    <p class="note" id="queueNote"></p>
+  </section>
+
+  <!-- ADMIN VIEW (placeholder until trends are built) -->
+  <section id="admin" class="hidden">
+    <div class="admin-bar"><h1 data-t="adminTitle">Admin trends</h1><button class="btn ghost" id="logout" type="button" data-t="logout">Log out</button></div>
+    <p class="sub" id="adminWho"></p>
+    <div class="tile" id="adminBody" data-t="adminSoon">Trend dashboard comes next. Login is working.</div>
+  </section>
+</main>
+
+<footer><span id="ver">v1.0</span> · <span id="modeTxt"></span></footer>
+
+<!-- LOGIN MODAL -->
+<div class="modal hidden" id="loginModal" role="dialog" aria-modal="true" aria-labelledby="lgT">
+  <form class="card" id="lf" autocomplete="off">
+    <h2 id="lgT" data-t="loginTitle">Admin login</h2>
+    <p class="sub" style="margin-bottom:0" data-t="loginSub">Authorised users only.</p>
+    <label for="em" data-t="email">Email</label>
+    <input id="em" type="email" inputmode="email" autocomplete="username">
+    <label for="pin" data-t="pin">PIN</label>
+    <input id="pin" type="password" inputmode="numeric" autocomplete="current-password">
+    <div class="err" id="lgErr"></div>
+    <button class="btn" id="lgGo" type="submit" data-t="login">Log in</button>
+    <button class="btn ghost" id="lgX" type="button" data-t="cancel">Cancel</button>
+  </form>
+</div>
+
+<script>
+(function(){
+'use strict';
+/* ====== CONFIG ====== */
+var VERSION='v1.0';
+// Paste your Apps Script Web App URL here after deploying Code.gs. Leave empty for preview mode.
+var API_URL='';
+var PREVIEW_PIN='demo';          // preview mode only. Real PIN lives in Apps Script, never in this file.
+
+/* ====== FORM VALUES (match the existing MS Forms export exactly) ====== */
+var CONTRACTORS=['EcoOils','PBS','KKS','GSB','WEN','Other'];
+var TYPES=[
+ ['Incident (Kejadian)','Incident','Kejadian'],
+ ['Near Miss (Hampir Terjadi)','Near Miss','Hampir Terjadi'],
+ ['Unsafe Act (Tindakan Tidak Aman)','Unsafe Act','Tindakan Tidak Aman'],
+ ['Unsafe Condition (Kondisi Tidak Aman)','Unsafe Condition','Kondisi Tidak Aman'],
+ ['Positive Observation/Pemerhatian yang positif','Positive Observation','Pemerhatian yang positif']
+];
+var STATUS=[['Open (Buka)','Open','Buka'],['Closed (Tutup)','Closed','Tutup']];
+var LOCATIONS=['ADMINISTRATION BUILDING','BLOCK 6B','COOLING TOWER','CONTROL ROOM, MCC ROOM','DDE TREATMENT PLANT (DTP)','DIESEL TANK','DIRTY COOLING TOWER','DRY AND LIQUID CHEMICAL STORAGE','EFFLUENT TREATMENT PLANT (ETP)','ELECTRICAL SUBSTATION (PLN)','EXTRACTION PLANT','FA PLANT','FIRE WATER PUMP HOUSE','FIRE WATER TANK','HEXANE AND DIESEL RECEIVING BAY','HEXANE TANK','LOADING/UNLOADING AREA (PUMP HOUSE)','OFFICE VEHICLE PARKING AREA','OIL POLISHING PLANT','PIPE RACK','PRE TREATMENT UNIT (PTU)','RAW WATER PIT','SCHEDULED & DOMESTIC WASTE SHED','SECURITY BUILDING','SECURITY POST','SILO','TANK FARM','TRUCK PARKING AREA','VAPOR ABSORPTION MACHINE (VAM) SHED','WAREHOUSE','WASTE WATER TREATMENT PLANT (WWTP)','WATER TANK','WATER TREATMENT PLANT (WTP) AND WATER TANKS','WEIGHT BRIDGE','WORKSHOP AREA'];
+var RISKS=['Access & Egress [Akses & Jalan Keluar]','Barrier & Edge Protection [Pelindung Penghalang & Tepi]','Biological hazard [Bahaya Biologis]','Bypassing Safety Controls [Mengabaikan Kontrol Keselamatan]','Chemical & HAZMAT [Bahan Kimia & Bahan Berbahaya]','Communication & Signage [Komunikasi & Perambu]','Confined Space [Ruang Terbatas]','Driving Safety [Keamanan Mengemudi]','Dropped Objects [Benda Jatuh]','Dust & Noise Control [Pengendalian Debu & Kebisingan]','Electrical Safety [Keselamatan Listrik]','Emergency Response [Tanggap Darurat]','Environmental & Waste Management [Manajemen Lingkungan & Limbah]','Fire Safety & Prevention [Keselamatan & Pencegahan Kebakaran]','Equipment Inspection [Inspeksi Peralatan]','Hand & Power Tools [Perkakas Tangan & Listrik]','Health & Welfare [Kesehatan & Kesejahteraan]','Heat Stress [Tekanan Panas]','Hot Work & Welding [Pekerjaan Panas & Pengelasan]','Housekeeping & Site Order [Kebersihan & Kerapihan Area]','Lifting Operations [Operasi Pengangkatan]','Lock Out – Tag Out (LOTO) [Penguncian & Pelabelan]','Permit to Work (PTW) [Izin Kerja]','PPE [Alat Pelindung Diri / APD]','Public Safety [Keamanan Publik]','Risk of Impact / Line of Fire [Risiko Benturan / Jalur Bahaya]','Scaffolding [Perancah]','Security & Site Access [Keamanan & Akses Lokasi]','Spill Prevention [Pencegahan Tumpahan]','Storage & Stacking [Penyimpanan & Penumpukan]','Slip, Trip & Fall [Terselip, Tersandung & Terjatuh]','Trenches & Excavation [Parit & Penggalian]','Working at Heights [Bekerja di Ketinggian]','Working during Dark hours [Bekerja di Jam Gelap / Malam Hari]','Other [Lainnya]'];
+
+/* ====== TEXT ====== */
+var T={
+ en:{tagline:'A commitment to look out for one another',title:'Report an unsafe act or condition',sub:'Takes about a minute. Report what you see, even if it is small.',date:'Date',contractor:'Contractor',name:'Your name',location:'Location',type:'Report type',desc:'What did you see?',rec:'Recommendation or action taken',optional:'(optional)',risk:'Critical risk control category',status:'Status',send:'Send report',sending:'Sending…',
+  pick:'Select…',skip:'None',other:'Other (type below)',locOther:'Type the location',req:'Required',
+  ok:'Report received. Thank you for looking out for others.',queued:'No connection. Report saved on this phone and will send automatically.',fail:'Could not send. Check your connection and try again.',
+  pending:'reports waiting to send',previewOk:'Preview only: report was NOT saved anywhere.',
+  loginTitle:'Admin login',loginSub:'Authorised users only.',email:'Email',pin:'PIN',login:'Log in',cancel:'Cancel',bad:'Email or PIN is incorrect.',locked:'Too many attempts. Try again in 15 minutes.',net:'Cannot reach the server.',
+  adminTitle:'Admin trends',logout:'Log out',adminSoon:'Trend dashboard comes next. Login is working.',preview:'Preview mode',live:'Live',signed:'Signed in as '},
+ id:{tagline:'Komitmen untuk saling menjaga',title:'Laporkan tindakan atau kondisi tidak aman',sub:'Sekitar satu menit. Laporkan yang Anda lihat, sekecil apa pun.',date:'Tanggal',contractor:'Kontraktor',name:'Nama Anda',location:'Lokasi',type:'Jenis laporan',desc:'Apa yang Anda lihat?',rec:'Rekomendasi atau tindakan yang diambil',optional:'(opsional)',risk:'Kategori kontrol risiko kritis',status:'Status',send:'Kirim laporan',sending:'Mengirim…',
+  pick:'Pilih…',skip:'Tidak ada',other:'Lainnya (ketik di bawah)',locOther:'Ketik lokasi',req:'Wajib diisi',
+  ok:'Laporan diterima. Terima kasih sudah peduli.',queued:'Tidak ada koneksi. Laporan disimpan di ponsel dan akan terkirim otomatis.',fail:'Gagal mengirim. Periksa koneksi lalu coba lagi.',
+  pending:'laporan menunggu dikirim',previewOk:'Hanya pratinjau: laporan TIDAK disimpan.',
+  loginTitle:'Login admin',loginSub:'Hanya untuk pengguna berwenang.',email:'Email',pin:'PIN',login:'Masuk',cancel:'Batal',bad:'Email atau PIN salah.',locked:'Terlalu banyak percobaan. Coba lagi dalam 15 menit.',net:'Tidak dapat terhubung ke server.',
+  adminTitle:'Tren admin',logout:'Keluar',adminSoon:'Dasbor tren menyusul. Login sudah berfungsi.',preview:'Mode pratinjau',live:'Aktif',signed:'Masuk sebagai '}
+};
+var lang='en';
+try{lang=localStorage.getItem('uauc_lang')||(/^id/i.test(navigator.language||'')?'id':'en');}catch(e){}
+function tr(k){return (T[lang]&&T[lang][k])||T.en[k]||k;}
+
+var $=function(id){return document.getElementById(id);};
+var typeSel='',statusSel='';
+
+function opt(v,t){var o=document.createElement('option');o.value=v;o.textContent=t;return o;}
+function buildSeg(box,name,items,onpick){
+  box.innerHTML='';
+  items.forEach(function(it){
+    var l=document.createElement('label'),i=document.createElement('input');
+    i.type='radio';i.name=name;i.value=it[0];
+    i.addEventListener('change',function(){onpick(it[0]);});
+    var s=document.createElement('span');s.textContent=(lang==='id'?it[2]:it[1]);
+    l.appendChild(i);l.appendChild(s);box.appendChild(l);
+  });
+}
+function build(){
+  var c=$('contractor'),cv=c.value; c.innerHTML='';c.appendChild(opt('',tr('pick')));CONTRACTORS.forEach(function(x){c.appendChild(opt(x,x));}); c.value=cv;
+  var l=$('location'),lv=l.value; l.innerHTML='';l.appendChild(opt('',tr('pick')));LOCATIONS.forEach(function(x){l.appendChild(opt(x,x));});l.appendChild(opt('__other',tr('other')));l.value=lv;
+  var r=$('risk'),rv=r.value; r.innerHTML='';r.appendChild(opt('',tr('skip')));RISKS.forEach(function(x){r.appendChild(opt(x,x));});r.value=rv;
+  buildSeg($('type'),'type',TYPES,function(v){typeSel=v;});
+  buildSeg($('status'),'status',STATUS,function(v){statusSel=v;});
+  [['type',typeSel],['status',statusSel]].forEach(function(p){
+    if(!p[1])return;var el=document.querySelector('#'+p[0]+' input[value="'+p[1].replace(/"/g,'\\"')+'"]');if(el)el.checked=true;
+  });
+}
+function applyLang(){
+  document.documentElement.lang=lang;
+  document.querySelectorAll('[data-t]').forEach(function(e){e.textContent=tr(e.getAttribute('data-t'));});
+  document.querySelectorAll('[data-ph]').forEach(function(e){e.placeholder=tr(e.getAttribute('data-ph'));});
+  $('lEN').classList.toggle('on',lang==='en');$('lID').classList.toggle('on',lang==='id');
+  build();updateQueueNote();updateMode();
+  if(session)$('adminWho').textContent=tr('signed')+session.email;
+}
+function setLang(l){lang=l;try{localStorage.setItem('uauc_lang',l);}catch(e){}applyLang();}
+function updateMode(){$('ver').textContent=VERSION;$('modeTxt').textContent=API_URL?tr('live'):tr('preview');}
+
+/* ====== FORM ====== */
+function today(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);}
+function uuid(){
+  try{if(window.crypto&&crypto.randomUUID)return crypto.randomUUID();}catch(e){}
+  return 'id-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,10);
+}
+function setErr(k,on){var e=document.querySelector('[data-e="'+k+'"]');if(e)e.textContent=on?tr('req'):'';}
+function collect(){
+  var loc=$('location').value; if(loc==='__other')loc=$('locationOther').value.trim();
+  return {date:$('date').value,contractor:$('contractor').value,name:$('name').value.trim(),location:loc,type:typeSel,
+    description:$('desc').value.trim(),recommendation:$('rec').value.trim(),risk:$('risk').value,status:statusSel};
+}
+function validate(d){
+  var bad={date:!d.date,contractor:!d.contractor,name:!d.name,location:!d.location,type:!d.type,desc:!d.description,status:!d.status};
+  var any=false;for(var k in bad){setErr(k,bad[k]);if(bad[k])any=true;}
+  return !any;
+}
+function notice(kind,msg){var n=$('notice');n.innerHTML='';var b=document.createElement('div');b.className='banner '+kind;b.textContent=msg;n.appendChild(b);window.scrollTo(0,0);}
+
+function post(body){
+  return fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body),redirect:'follow'}).then(function(r){return r.json();});
+}
+var QK='uauc_queue';
+function getQ(){try{return JSON.parse(localStorage.getItem(QK)||'[]');}catch(e){return [];}}
+function setQ(q){try{localStorage.setItem(QK,JSON.stringify(q));}catch(e){}}
+function updateQueueNote(){var n=getQ().length;$('queueNote').textContent=n?(n+' '+tr('pending')):'';}
+function flushQueue(){
+  if(!API_URL)return;var q=getQ();if(!q.length)return;
+  var p=Promise.resolve(),left=[];
+  q.forEach(function(item){p=p.then(function(){return post(item).then(function(r){if(!r||!r.ok)left.push(item);}).catch(function(){left.push(item);});});});
+  p.then(function(){setQ(left);updateQueueNote();});
+}
+function resetForm(){
+  $('f').reset();typeSel='';statusSel='';$('date').value=today();$('locationOther').classList.add('hidden');build();
+  var keep=null;try{keep=localStorage.getItem('uauc_name');}catch(e){} if(keep)$('name').value=keep;
+}
+function onSubmit(ev){
+  ev.preventDefault();
+  var d=collect();if(!validate(d))return;
+  d.action='submit';d.id=uuid();
+  try{localStorage.setItem('uauc_name',d.name);}catch(e){}
+  var btn=$('send');btn.disabled=true;btn.textContent=tr('sending');
+  var done=function(kind,msg){btn.disabled=false;btn.textContent=tr('send');notice(kind,msg);};
+  if(!API_URL){resetForm();return done('warn',tr('previewOk'));}
+  post(d).then(function(r){
+    if(r&&r.ok){resetForm();done('ok',tr('ok'));}
+    else{done('warn',tr('fail'));}
+  }).catch(function(){
+    var q=getQ();q.push(d);setQ(q);updateQueueNote();resetForm();done('warn',tr('queued'));
+  });
+}
+
+/* ====== ADMIN LOGIN ====== */
+var session=null;
+function openLogin(){
+  if(session){showAdmin();return;}
+  $('lgErr').textContent='';$('pin').value='';$('loginModal').classList.remove('hidden');$('em').focus();
+}
+function closeLogin(){$('loginModal').classList.add('hidden');if(location.hash==='#admin'){try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}}}
+function showAdmin(){
+  $('crew').classList.add('hidden');$('admin').classList.remove('hidden');
+  $('adminWho').textContent=tr('signed')+session.email;
+}
+function showCrew(){$('admin').classList.add('hidden');$('crew').classList.remove('hidden');}
+function onLogin(ev){
+  ev.preventDefault();
+  var email=$('em').value.trim().toLowerCase(),pin=$('pin').value;
+  var err=$('lgErr');err.textContent='';
+  if(!email||!pin){err.textContent=tr('bad');return;}
+  if(!API_URL){
+    if(pin===PREVIEW_PIN){session={email:email,token:'preview'};$('pin').value='';closeLogin();showAdmin();}
+    else err.textContent=tr('bad');
+    return;
+  }
+  $('lgGo').disabled=true;
+  post({action:'login',email:email,pin:pin}).then(function(r){
+    $('lgGo').disabled=false;$('pin').value='';
+    if(r&&r.ok){session={email:email,token:r.token};closeLogin();showAdmin();}
+    else err.textContent=(r&&r.locked)?tr('locked'):tr('bad');
+  }).catch(function(){$('lgGo').disabled=false;err.textContent=tr('net');});
+}
+function logout(){session=null;showCrew();}
+
+/* ====== WIRING ====== */
+document.addEventListener('keydown',function(e){
+  var k=(e.key||'').toLowerCase();
+  if(e.altKey&&(e.ctrlKey||e.shiftKey)&&(k==='m'||e.code==='KeyM')){e.preventDefault();openLogin();}
+  else if(e.key==='Escape'&&!$('loginModal').classList.contains('hidden'))closeLogin();
+});
+window.addEventListener('hashchange',function(){if(location.hash==='#admin')openLogin();});
+$('f').addEventListener('submit',onSubmit);
+$('location').addEventListener('change',function(){var o=$('location').value==='__other';$('locationOther').classList.toggle('hidden',!o);if(o)$('locationOther').focus();});
+$('lf').addEventListener('submit',onLogin);
+$('lgX').addEventListener('click',closeLogin);
+$('logout').addEventListener('click',logout);
+$('lEN').addEventListener('click',function(){setLang('en');});
+$('lID').addEventListener('click',function(){setLang('id');});
+window.addEventListener('online',flushQueue);
+
+$('date').value=today();
+try{var nm=localStorage.getItem('uauc_name');if(nm)$('name').value=nm;}catch(e){}
+applyLang();flushQueue();
+if(location.hash==='#admin')openLogin();
+})();
+</script>
+</body>
+</html>
