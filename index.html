@@ -46,7 +46,7 @@ footer{text-align:center;color:var(--mute);font-size:12px;padding:18px}
 .card h2{margin:0 0 4px;font-size:19px}
 .admin-bar{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .admin-bar button{width:auto;margin:0;padding:8px 14px}
-.tile{background:var(--panel);border:1px dashed var(--line);border-radius:var(--r);padding:16px;margin-top:14px;color:var(--mute)}
+.atile{background:var(--panel);border:1px dashed var(--line);border-radius:var(--r);padding:16px;margin-top:14px;color:var(--mute)}
 
 .grid{display:block}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -74,9 +74,32 @@ footer{padding:6px}
   .col.grow textarea{flex:1;min-height:60px;resize:none}
   .sendbar{position:static;margin:10px 0 0;padding:0;background:none;display:flex;justify-content:flex-end}
   .sendbar .btn{width:340px}
-  #type{grid-template-columns:1fr}
+  .td{display:none}
+  .pic svg{width:42px;height:42px}
+  .pic{padding:5px 0 3px}
+  .pick{padding:6px 8px 7px}
 }
 @media (min-width:900px) and (max-height:619px){main{max-width:1000px}}
+
+.tiles{display:grid;gap:8px}
+.tiles.two{grid-template-columns:1fr 1fr}
+.tiles.three{grid-template-columns:repeat(3,1fr)}
+.tile{position:relative;background:var(--panel);border:2px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column}
+.pic{width:100%;position:relative;border:0;background:var(--panel2);padding:8px 0 5px;cursor:pointer;display:flex;justify-content:center;color:inherit}
+.pic svg{width:54px;height:54px;display:block}
+.pic .q{position:absolute;top:5px;right:5px;width:20px;height:20px;border-radius:50%;border:1.5px solid #c3d0e0;color:#e6edf6;font:700 12px/17px system-ui,sans-serif;text-align:center}
+.pick{margin:0;padding:7px 8px 9px;display:block;cursor:pointer;font-weight:400}
+.pick input{position:absolute;opacity:0;pointer-events:none}
+.tt{display:block;font-weight:700;font-size:14px;line-height:1.2;color:#fff}
+.td{display:block;font-size:12px;line-height:1.3;color:#c9d6e6;margin-top:3px}
+.tile:has(input:checked){border-color:var(--amber);box-shadow:0 0 0 1px var(--amber)}
+.tile:has(input:focus-visible){outline:2px solid var(--amber2);outline-offset:1px}
+.sublab{font-weight:600;font-size:13px;margin:10px 0 4px}
+.tiles.three .tt{font-size:13px}.tiles.three .td{display:none}
+.card{position:relative}
+.xbtn{position:absolute;top:10px;right:10px;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--panel2);color:#fff;font-size:24px;line-height:1;cursor:pointer}
+.big svg{width:130px;height:130px;display:block;margin:8px auto 8px}
+.exl{font-size:13px;color:var(--amber2);margin:0;line-height:1.35}
 </style>
 </head>
 <body>
@@ -106,8 +129,8 @@ footer{padding:6px}
           <div class="err" data-e="location"></div>
         </div>
         <div class="col">
-          <label data-t="type">Report type</label>
-          <div class="seg" id="type"></div><div class="err" data-e="type"></div>
+          <label data-t="type">What are you reporting?</label>
+          <div id="typeBox"><div class="tiles two" id="t1"></div><div class="sublab hidden" id="subLab"></div><div class="tiles three hidden" id="t2"></div></div><div class="err" data-e="type"></div>
           <label for="risk" data-t="risk">Critical risk control category</label>
           <select id="risk" required></select><div class="err" data-e="risk"></div>
           <label data-t="status">Status</label>
@@ -129,11 +152,23 @@ footer{padding:6px}
   <section id="admin" class="hidden">
     <div class="admin-bar"><h1 data-t="adminTitle">Admin trends</h1><button class="btn ghost" id="logout" type="button" data-t="logout">Log out</button></div>
     <p class="sub" id="adminWho"></p>
-    <div class="tile" id="adminBody" data-t="adminSoon">Trend dashboard comes next. Login is working.</div>
+    <div class="atile" id="adminBody" data-t="adminSoon">Trend dashboard comes next. Login is working.</div>
   </section>
 </main>
 
 <footer><span id="modeTxt"></span></footer>
+
+<!-- INFO POPUP -->
+<div class="modal hidden" id="infoModal" role="dialog" aria-modal="true" aria-labelledby="inT">
+  <div class="card" style="max-width:340px;text-align:center">
+    <button class="xbtn" id="inX" type="button" aria-label="Close">&times;</button>
+    <div class="big" id="inPic"></div>
+    <h2 id="inT"></h2>
+    <p class="sub" id="inD" style="margin:6px 0 8px;font-size:14px;color:#c3d0e0"></p>
+    <p class="exl" id="inEx"></p>
+    <button class="btn" id="inGo" type="button" style="margin-top:14px"></button>
+  </div>
+</div>
 
 <!-- LOGIN MODAL -->
 <div class="modal hidden" id="loginModal" role="dialog" aria-modal="true" aria-labelledby="lgT">
@@ -161,26 +196,35 @@ var PREVIEW_PIN='demo';          // preview mode only. Real PIN lives in Apps Sc
 
 /* ====== FORM VALUES (match the existing MS Forms export exactly) ====== */
 var CONTRACTORS=['EcoOils','PBS','KKS','GSB','WEN','Other'];
-var TYPES=[
- ['Near Miss (Hampir Terjadi)','Near Miss','Hampir Terjadi'],
- ['Unsafe Act (Tindakan Tidak Aman)','Unsafe Act','Tindakan Tidak Aman'],
- ['Unsafe Condition (Kondisi Tidak Aman)','Unsafe Condition','Kondisi Tidak Aman'],
- ['Positive Observation/Pemerhatian yang positif','Positive Observation','Pemerhatian yang positif']
-];
+var TILE={
+ near:{v:'Near Miss (Hampir Terjadi)',en:['Near Miss','It could have hurt someone or damaged something, but it did not.','Example: a load slips and lands where nobody stands.'],id:['Hampir Terjadi','Bisa menyebabkan cedera atau kerusakan, tetapi tidak terjadi.','Contoh: beban terlepas dan jatuh di area yang kosong.']},
+ obs:{v:'',en:['Observation','Something you noticed, good or not good. Nothing actually happened.','Choose next: positive, unsafe act or unsafe condition.'],id:['Pemerhatian','Sesuatu yang Anda lihat, baik atau tidak baik. Tidak ada kejadian.','Pilih berikutnya: positif, tindakan tidak aman atau kondisi tidak aman.']},
+ pos:{v:'Positive Observation/Pemerhatian yang positif',en:['Positive','A good or safe way of working.','Example: a crew member stops work to fix a hazard.'],id:['Positif','Cara kerja yang baik dan aman.','Contoh: pekerja menghentikan pekerjaan untuk memperbaiki bahaya.']},
+ ua:{v:'Unsafe Act (Tindakan Tidak Aman)',en:['Unsafe Act','What a person does that could cause harm.','Example: working at height without a harness.'],id:['Tindakan Tidak Aman','Tindakan seseorang yang bisa menyebabkan bahaya.','Contoh: bekerja di ketinggian tanpa harness.']},
+ uc:{v:'Unsafe Condition (Kondisi Tidak Aman)',en:['Unsafe Condition','A place, equipment or surroundings that are not safe.','Example: an oil spill on a walkway.'],id:['Kondisi Tidak Aman','Tempat, peralatan atau lingkungan yang tidak aman.','Contoh: tumpahan oli di jalur jalan kaki.']}
+};
+var P='<svg viewBox="0 0 64 64" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">';
+var ICON={
+ near:P+'<path d="M12 5v8M19 3v10M26 5v8" stroke="#ffc861" stroke-width="3"/><rect x="9" y="17" width="18" height="18" rx="2" fill="#e8603c" transform="rotate(12 18 26)"/><circle cx="46" cy="22" r="5.5" fill="#fff"/><path d="M46 29l-4 14-9 9M42 43l9 11M46 30l9 7M46 31l-9 5" stroke="#fff" stroke-width="4"/><path d="M5 59h54" stroke="#4a6a8c" stroke-width="3"/></svg>',
+ obs:P+'<path d="M5 32C13 18 23 12 32 12s19 6 27 20c-8 14-18 20-27 20S13 46 5 32z" stroke="#fff" stroke-width="4"/><circle cx="32" cy="32" r="10" fill="#f5a623"/><circle cx="32" cy="32" r="4.5" fill="#122238"/></svg>',
+ pos:P+'<path d="M32 5l21 8v15c0 15-9 25-21 31C20 53 11 43 11 28V13z" fill="rgba(62,207,142,.18)" stroke="#3ecf8e" stroke-width="4"/><path d="M21 32l8 8 15-17" stroke="#3ecf8e" stroke-width="5.5"/></svg>',
+ ua:P+'<circle cx="20" cy="20" r="5.5" fill="#fff"/><path d="M20 27v16M20 43l-8 13M20 43l8 13M20 32l-10 7M20 32l11-9" stroke="#fff" stroke-width="4"/><path d="M47 9l13 23H34z" fill="#f5a623" stroke="#f5a623" stroke-width="3"/><path d="M47 17v8" stroke="#122238" stroke-width="3.5"/><circle cx="47" cy="29" r="1.8" fill="#122238" stroke="none"/></svg>',
+ uc:P+'<ellipse cx="32" cy="57" rx="25" ry="4.5" fill="#5aa9e6" fill-opacity=".75" stroke="none"/><path d="M22 54l10-42 10 42z" fill="#f5a623" stroke="#f5a623" stroke-width="3"/><path d="M32 23v14" stroke="#122238" stroke-width="4"/><circle cx="32" cy="45" r="2.3" fill="#122238" stroke="none"/></svg>'
+};
 var STATUS=[['Open (Buka)','Open','Buka'],['Closed (Tutup)','Closed','Tutup']];
 var LOCATIONS=['ADMINISTRATION BUILDING','BLOCK 6B','COOLING TOWER','CONTROL ROOM, MCC ROOM','DDE TREATMENT PLANT (DTP)','DIESEL TANK','DIRTY COOLING TOWER','DRY AND LIQUID CHEMICAL STORAGE','EFFLUENT TREATMENT PLANT (ETP)','ELECTRICAL SUBSTATION (PLN)','EXTRACTION PLANT','FA PLANT','FIRE WATER PUMP HOUSE','FIRE WATER TANK','HEXANE AND DIESEL RECEIVING BAY','HEXANE TANK','LOADING/UNLOADING AREA (PUMP HOUSE)','OFFICE VEHICLE PARKING AREA','OIL POLISHING PLANT','PIPE RACK','PRE TREATMENT UNIT (PTU)','RAW WATER PIT','SCHEDULED & DOMESTIC WASTE SHED','SECURITY BUILDING','SECURITY POST','SILO','TANK FARM','TRUCK PARKING AREA','VAPOR ABSORPTION MACHINE (VAM) SHED','WAREHOUSE','WASTE WATER TREATMENT PLANT (WWTP)','WATER TANK','WATER TREATMENT PLANT (WTP) AND WATER TANKS','WEIGHT BRIDGE','WORKSHOP AREA'];
 var RISKS=['Access & Egress [Akses & Jalan Keluar]','Barrier & Edge Protection [Pelindung Penghalang & Tepi]','Biological hazard [Bahaya Biologis]','Bypassing Safety Controls [Mengabaikan Kontrol Keselamatan]','Chemical & HAZMAT [Bahan Kimia & Bahan Berbahaya]','Communication & Signage [Komunikasi & Perambu]','Confined Space [Ruang Terbatas]','Driving Safety [Keamanan Mengemudi]','Dropped Objects [Benda Jatuh]','Dust & Noise Control [Pengendalian Debu & Kebisingan]','Electrical Safety [Keselamatan Listrik]','Emergency Response [Tanggap Darurat]','Environmental & Waste Management [Manajemen Lingkungan & Limbah]','Fire Safety & Prevention [Keselamatan & Pencegahan Kebakaran]','Equipment Inspection [Inspeksi Peralatan]','Hand & Power Tools [Perkakas Tangan & Listrik]','Health & Welfare [Kesehatan & Kesejahteraan]','Heat Stress [Tekanan Panas]','Hot Work & Welding [Pekerjaan Panas & Pengelasan]','Housekeeping & Site Order [Kebersihan & Kerapihan Area]','Lifting Operations [Operasi Pengangkatan]','Lock Out – Tag Out (LOTO) [Penguncian & Pelabelan]','Permit to Work (PTW) [Izin Kerja]','PPE [Alat Pelindung Diri / APD]','Public Safety [Keamanan Publik]','Risk of Impact / Line of Fire [Risiko Benturan / Jalur Bahaya]','Scaffolding [Perancah]','Security & Site Access [Keamanan & Akses Lokasi]','Spill Prevention [Pencegahan Tumpahan]','Storage & Stacking [Penyimpanan & Penumpukan]','Slip, Trip & Fall [Terselip, Tersandung & Terjatuh]','Trenches & Excavation [Parit & Penggalian]','Working at Heights [Bekerja di Ketinggian]','Working during Dark hours [Bekerja di Jam Gelap / Malam Hari]','Other [Lainnya]'];
 
 /* ====== TEXT ====== */
 var T={
- en:{tagline:'A commitment to look out for one another',title:'Report what you see on site',sub:'Unsafe acts, unsafe conditions, near misses or positive observations. Takes about a minute, and small things count.',date:'Date',contractor:'Contractor',name:'Your name',location:'Location',type:'Report type',desc:'What did you see?',rec:'Recommendation or action taken',optional:'(optional)',risk:'Critical risk control category',status:'Status',send:'Send report',sending:'Sending…',
-  pick:'Select…',skip:'None',other:'Other (type below)',locOther:'Type the location',req:'Required',
+ en:{tagline:'A commitment to look out for one another',title:'Report what you see on site',sub:'Unsafe acts, unsafe conditions, near misses or positive observations. Takes about a minute, and small things count.',date:'Date',contractor:'Contractor',name:'Your name',location:'Location',type:'What are you reporting?',desc:'What did you see?',rec:'Recommendation or action taken',optional:'(optional)',risk:'Critical risk control category',status:'Status',send:'Send report',sending:'Sending…',
+  pick:'Select…',skip:'None',sublab:'What kind of observation?',choose:'Choose this',close:'Close',more:'More info',other:'Other (type below)',locOther:'Type the location',req:'Required',
   ok:'Report received. Thank you for looking out for others.',queued:'No connection. Report saved on this phone and will send automatically.',fail:'Could not send. Check your connection and try again.',
   pending:'reports waiting to send',previewOk:'Preview only: report was NOT saved anywhere.',
   loginTitle:'Admin login',loginSub:'Authorised users only.',email:'Email',pin:'PIN',login:'Log in',cancel:'Cancel',bad:'Email or PIN is incorrect.',locked:'Too many attempts. Try again in 15 minutes.',net:'Cannot reach the server.',
   adminTitle:'Admin trends',logout:'Log out',adminSoon:'Trend dashboard comes next. Login is working.',preview:'Preview mode',live:'Live',signed:'Signed in as '},
- id:{tagline:'Komitmen untuk saling menjaga',title:'Laporkan yang Anda lihat di lokasi',sub:'Tindakan tidak aman, kondisi tidak aman, hampir terjadi, atau pemerhatian positif. Sekitar satu menit, hal kecil pun penting.',date:'Tanggal',contractor:'Kontraktor',name:'Nama Anda',location:'Lokasi',type:'Jenis laporan',desc:'Apa yang Anda lihat?',rec:'Rekomendasi atau tindakan yang diambil',optional:'(opsional)',risk:'Kategori kontrol risiko kritis',status:'Status',send:'Kirim laporan',sending:'Mengirim…',
-  pick:'Pilih…',skip:'Tidak ada',other:'Lainnya (ketik di bawah)',locOther:'Ketik lokasi',req:'Wajib diisi',
+ id:{tagline:'Komitmen untuk saling menjaga',title:'Laporkan yang Anda lihat di lokasi',sub:'Tindakan tidak aman, kondisi tidak aman, hampir terjadi, atau pemerhatian positif. Sekitar satu menit, hal kecil pun penting.',date:'Tanggal',contractor:'Kontraktor',name:'Nama Anda',location:'Lokasi',type:'Apa yang Anda laporkan?',desc:'Apa yang Anda lihat?',rec:'Rekomendasi atau tindakan yang diambil',optional:'(opsional)',risk:'Kategori kontrol risiko kritis',status:'Status',send:'Kirim laporan',sending:'Mengirim…',
+  pick:'Pilih…',skip:'Tidak ada',sublab:'Jenis pemerhatian apa?',choose:'Pilih ini',close:'Tutup',more:'Info lengkap',other:'Lainnya (ketik di bawah)',locOther:'Ketik lokasi',req:'Wajib diisi',
   ok:'Laporan diterima. Terima kasih sudah peduli.',queued:'Tidak ada koneksi. Laporan disimpan di ponsel dan akan terkirim otomatis.',fail:'Gagal mengirim. Periksa koneksi lalu coba lagi.',
   pending:'laporan menunggu dikirim',previewOk:'Hanya pratinjau: laporan TIDAK disimpan.',
   loginTitle:'Login admin',loginSub:'Hanya untuk pengguna berwenang.',email:'Email',pin:'PIN',login:'Masuk',cancel:'Batal',bad:'Email atau PIN salah.',locked:'Terlalu banyak percobaan. Coba lagi dalam 15 menit.',net:'Tidak dapat terhubung ke server.',
@@ -191,7 +235,7 @@ try{lang=localStorage.getItem('uauc_lang')||(/^id/i.test(navigator.language||'')
 function tr(k){return (T[lang]&&T[lang][k])||T.en[k]||k;}
 
 var $=function(id){return document.getElementById(id);};
-var typeSel='',statusSel='';
+var typeSel='',statusSel='',s1='',s2='';
 
 function opt(v,t){var o=document.createElement('option');o.value=v;o.textContent=t;return o;}
 function buildSeg(box,name,items,onpick){
@@ -204,13 +248,50 @@ function buildSeg(box,name,items,onpick){
     l.appendChild(i);l.appendChild(s);box.appendChild(l);
   });
 }
+function L(k){return TILE[k][lang==='id'?'id':'en'];}
+function mkTile(k,name){
+  var t=document.createElement('div');t.className='tile';
+  var pic=document.createElement('button');pic.type='button';pic.className='pic';pic.setAttribute('aria-label',L(k)[0]+' – '+tr('more'));
+  pic.innerHTML=ICON[k]+'<span class="q" aria-hidden="true">?</span>';
+  pic.addEventListener('click',function(){openInfo(k);});
+  var lb=document.createElement('label');lb.className='pick';
+  var i=document.createElement('input');i.type='radio';i.name=name;i.value=k;
+  i.addEventListener('change',function(){choose(k);});
+  lb.appendChild(i);
+  var a=document.createElement('span');a.className='tt';a.textContent=L(k)[0];
+  var b=document.createElement('span');b.className='td';b.textContent=L(k)[1];
+  lb.appendChild(a);lb.appendChild(b);t.appendChild(pic);t.appendChild(lb);return t;
+}
+function renderTiles(){
+  var t1=$('t1'),t2=$('t2');t1.innerHTML='';t2.innerHTML='';
+  ['near','obs'].forEach(function(k){t1.appendChild(mkTile(k,'t1'));});
+  ['pos','ua','uc'].forEach(function(k){t2.appendChild(mkTile(k,'t2'));});
+  $('subLab').textContent=tr('sublab');
+  $('subLab').classList.toggle('hidden',s1!=='obs');t2.classList.toggle('hidden',s1!=='obs');
+  if(s1){var e=document.querySelector('#t1 input[value="'+s1+'"]');if(e)e.checked=true;}
+  if(s2){var f=document.querySelector('#t2 input[value="'+s2+'"]');if(f)f.checked=true;}
+}
+function choose(k){
+  if(k==='near'){s1='near';s2='';typeSel=TILE.near.v;}
+  else if(k==='obs'){s1='obs';s2='';typeSel='';}
+  else{s1='obs';s2=k;typeSel=TILE[k].v;}
+  setErr('type',false);renderTiles();
+}
+var infoKey='';
+function openInfo(k){
+  infoKey=k;var d=L(k);
+  $('inPic').innerHTML=ICON[k];$('inT').textContent=d[0];$('inD').textContent=d[1];$('inEx').textContent=d[2];
+  $('inGo').textContent=tr('choose');$('inX').setAttribute('aria-label',tr('close'));
+  $('infoModal').classList.remove('hidden');$('inX').focus();
+}
+function closeInfo(){$('infoModal').classList.add('hidden');}
 function build(){
   var c=$('contractor'),cv=c.value; c.innerHTML='';c.appendChild(opt('',tr('pick')));CONTRACTORS.forEach(function(x){c.appendChild(opt(x,x));}); c.value=cv;
   var l=$('location'),lv=l.value; l.innerHTML='';l.appendChild(opt('',tr('pick')));LOCATIONS.forEach(function(x){l.appendChild(opt(x,x));});l.appendChild(opt('__other',tr('other')));l.value=lv;
   var r=$('risk'),rv=r.value; r.innerHTML='';r.appendChild(opt('',tr('pick')));RISKS.forEach(function(x){r.appendChild(opt(x,x));});r.value=rv;
-  buildSeg($('type'),'type',TYPES,function(v){typeSel=v;});
+  renderTiles();
   buildSeg($('status'),'status',STATUS,function(v){statusSel=v;});
-  [['type',typeSel],['status',statusSel]].forEach(function(p){
+  [['status',statusSel]].forEach(function(p){
     if(!p[1])return;var el=document.querySelector('#'+p[0]+' input[value="'+p[1].replace(/"/g,'\\"')+'"]');if(el)el.checked=true;
   });
 }
@@ -258,7 +339,7 @@ function flushQueue(){
   p.then(function(){setQ(left);updateQueueNote();});
 }
 function resetForm(){
-  $('f').reset();typeSel='';statusSel='';$('date').value=today();$('locationOther').classList.add('hidden');build();
+  $('f').reset();typeSel='';statusSel='';s1='';s2='';$('date').value=today();$('locationOther').classList.add('hidden');build();
   var keep=null;try{keep=localStorage.getItem('uauc_name');}catch(e){} if(keep)$('name').value=keep;
 }
 function onSubmit(ev){
@@ -312,12 +393,15 @@ function logout(){session=null;showCrew();}
 document.addEventListener('keydown',function(e){
   var k=(e.key||'').toLowerCase();
   if(e.altKey&&(e.ctrlKey||e.shiftKey)&&(k==='m'||e.code==='KeyM')){e.preventDefault();openLogin();}
-  else if(e.key==='Escape'&&!$('loginModal').classList.contains('hidden'))closeLogin();
+  else if(e.key==='Escape'){if(!$('infoModal').classList.contains('hidden'))closeInfo();else if(!$('loginModal').classList.contains('hidden'))closeLogin();}
 });
 window.addEventListener('hashchange',function(){if(location.hash==='#admin')openLogin();});
 $('f').addEventListener('submit',onSubmit);
 $('location').addEventListener('change',function(){var o=$('location').value==='__other';$('locationOther').classList.toggle('hidden',!o);if(o)$('locationOther').focus();});
 $('lf').addEventListener('submit',onLogin);
+$('inX').addEventListener('click',closeInfo);
+$('infoModal').addEventListener('click',function(e){if(e.target===$('infoModal'))closeInfo();});
+$('inGo').addEventListener('click',function(){closeInfo();choose(infoKey);});
 $('lgX').addEventListener('click',closeLogin);
 $('logout').addEventListener('click',logout);
 $('lEN').addEventListener('click',function(){setLang('en');});
