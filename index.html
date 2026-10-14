@@ -215,9 +215,9 @@ var CONTRACTORS=['EcoOils','PBS','KKS','GSB','WEN','Other'];
 var TILE={
  near:{v:'Near Miss (Hampir Terjadi)',en:['Near Miss','It could have hurt someone or damaged something, but it did not.','Example: a load slips and lands where nobody stands.'],id:['Hampir Terjadi','Bisa menyebabkan cedera atau kerusakan, tetapi tidak terjadi.','Contoh: beban terlepas dan jatuh di area yang kosong.']},
  obs:{v:'',en:['Observation','Something you noticed, good or not good. Nothing actually happened.','Choose next: positive, unsafe act or unsafe condition.'],id:['Pemerhatian','Sesuatu yang Anda lihat, baik atau tidak baik. Tidak ada kejadian.','Pilih berikutnya: positif, tindakan tidak aman atau kondisi tidak aman.']},
- pos:{v:'Positive Observation/Pemerhatian yang positif',en:['Positive','A good or safe way of working.','Example: a crew member stops work to fix a hazard.'],id:['Positif','Cara kerja yang baik dan aman.','Contoh: pekerja menghentikan pekerjaan untuk memperbaiki bahaya.']},
- ua:{v:'Unsafe Act (Tindakan Tidak Aman)',en:['Unsafe Act','What a person does that could cause harm.','Example: working at height without a harness.'],id:['Tindakan Tidak Aman','Tindakan seseorang yang bisa menyebabkan bahaya.','Contoh: bekerja di ketinggian tanpa harness.']},
- uc:{v:'Unsafe Condition (Kondisi Tidak Aman)',en:['Unsafe Condition','A place, equipment or surroundings that are not safe.','Example: an oil spill on a walkway.'],id:['Kondisi Tidak Aman','Tempat, peralatan atau lingkungan yang tidak aman.','Contoh: tumpahan oli di jalur jalan kaki.']}
+ pos:{v:'Positive Observation/Pemerhatian yang positif',en:['Positive','A good or safe way of working.'],id:['Positif','Cara kerja yang baik dan aman.']},
+ ua:{v:'Unsafe Act (Tindakan Tidak Aman)',en:['Unsafe Act','What a person does that could cause harm.'],id:['Tindakan Tidak Aman','Tindakan seseorang yang bisa menyebabkan bahaya.']},
+ uc:{v:'Unsafe Condition (Kondisi Tidak Aman)',en:['Unsafe Condition','A place, equipment or surroundings that are not safe.'],id:['Kondisi Tidak Aman','Tempat, peralatan atau lingkungan yang tidak aman.']}
 };
 var P='<svg viewBox="0 0 64 64" fill="none" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">';
 var ICON={
@@ -370,7 +370,7 @@ function choose(k){
 var infoKey='';
 function openInfo(k){
   infoKey=k;var isL=k.indexOf('lsr:')===0;var d=isL?LL(k.slice(4)).concat(['']):L(k);
-  $('inPic').innerHTML=isL?LSR[k.slice(4)].i:ICON[k];$('inT').textContent=d[0];$('inD').textContent=d[1];$('inEx').textContent=d[2];
+  $('inPic').innerHTML=isL?LSR[k.slice(4)].i:ICON[k];$('inT').textContent=d[0];$('inD').textContent=d[1];$('inEx').textContent=d[2]||'';
   $('inGo').textContent=tr('choose');$('inX').setAttribute('aria-label',tr('close'));
   $('infoModal').classList.remove('hidden');$('inX').focus();
 }
