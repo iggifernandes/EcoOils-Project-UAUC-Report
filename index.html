@@ -60,9 +60,9 @@ footer{text-align:center;color:var(--mute);font-size:12px;padding:18px}
 .err:empty{display:none}
 .note{margin:4px 0 0}
 footer{padding:6px}
-@media (min-width:900px) and (min-height:620px){
+@media (min-width:900px) and (min-height:700px){
   html,body{height:100%}
-  body{display:flex;flex-direction:column;overflow:hidden}
+  body{display:flex;flex-direction:column;overflow-x:hidden;overflow-y:auto}
   main{flex:1;min-height:0;width:100%;max-width:1180px;padding:12px 24px 0;display:flex;flex-direction:column}
   #crew{flex:1;min-height:0;display:flex;flex-direction:column}
   .head{display:flex;align-items:baseline;gap:14px;margin-bottom:2px}
@@ -79,7 +79,7 @@ footer{padding:6px}
   .pic{padding:5px 0 3px}
   .pick{padding:6px 8px 7px}
 }
-@media (min-width:900px) and (max-height:619px){main{max-width:1000px}}
+@media (min-width:900px) and (max-height:699px){main{max-width:1000px}}
 
 .tiles{display:grid;gap:8px}
 .tiles.two{grid-template-columns:1fr 1fr}
@@ -100,6 +100,21 @@ footer{padding:6px}
 .xbtn{position:absolute;top:10px;right:10px;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--panel2);color:#fff;font-size:24px;line-height:1;cursor:pointer}
 .big svg{width:130px;height:130px;display:block;margin:8px auto 8px}
 .exl{font-size:13px;color:var(--amber2);margin:0;line-height:1.35}
+
+.tiles.lsr .pic{background:#e5f0f5}
+.tiles.lsr .pic .q{border-color:#1b3a63;color:#1b3a63}
+.tiles.lsr .pic svg{width:42px;height:42px}
+.tiles.lsr .pic{padding:6px 0 3px}
+.tiles.lsr .pick{padding:5px 6px 7px}
+.tiles.lsr .tt{font-size:12.5px;line-height:1.15}
+.tiles.lsr .pic .q{width:18px;height:18px;font-size:11px;line-height:15px}
+@media (min-width:900px) and (min-height:700px){
+  .tiles.lsr .pic svg{width:30px;height:30px}
+  .tiles.lsr .pic{padding:3px 0 2px}
+  .tiles.lsr .pick{padding:3px 6px 5px}
+  .tiles.lsr .tt{font-size:12px}
+  #lsrBox label{margin-top:8px}
+}
 </style>
 </head>
 <body>
@@ -131,6 +146,7 @@ footer{padding:6px}
         <div class="col">
           <label data-t="type">What are you reporting?</label>
           <div id="typeBox"><div class="tiles two" id="t1"></div><div class="sublab hidden" id="subLab"></div><div class="tiles three hidden" id="t2"></div></div><div class="err" data-e="type"></div>
+          <div id="lsrBox" class="hidden"><label data-t="lsrQ">Is a Life-Saving Rule involved?</label><div class="seg two" id="lsrYN"></div><div class="sublab hidden" id="lsrLab"></div><div class="tiles three lsr hidden" id="lsrGrid"></div><div class="err" data-e="lsr"></div></div>
           <label for="risk" data-t="risk">Critical risk control category</label>
           <select id="risk" required></select><div class="err" data-e="risk"></div>
           <label data-t="status">Status</label>
@@ -218,13 +234,13 @@ var RISKS=['Access & Egress [Akses & Jalan Keluar]','Barrier & Edge Protection [
 /* ====== TEXT ====== */
 var T={
  en:{tagline:'A commitment to look out for one another',title:'Report what you see on site',sub:'Unsafe acts, unsafe conditions, near misses or positive observations. Takes about a minute, and small things count.',date:'Date',contractor:'Contractor',name:'Your name',location:'Location',type:'What are you reporting?',desc:'What did you see?',rec:'Recommendation or action taken',optional:'(optional)',risk:'Critical risk control category',status:'Status',send:'Send report',sending:'Sending…',
-  pick:'Select…',skip:'None',sublab:'What kind of observation?',choose:'Choose this',close:'Close',more:'More info',other:'Other (type below)',locOther:'Type the location',req:'Required',
+  pick:'Select…',skip:'None',sublab:'What kind of observation?',lsrQ:'Is a Life-Saving Rule involved?',lsrWhich:'Which rule?',yes:'Yes',no:'No',choose:'Choose this',close:'Close',more:'More info',other:'Other (type below)',locOther:'Type the location',req:'Required',
   ok:'Report received. Thank you for looking out for others.',queued:'No connection. Report saved on this phone and will send automatically.',fail:'Could not send. Check your connection and try again.',
   pending:'reports waiting to send',previewOk:'Preview only: report was NOT saved anywhere.',
   loginTitle:'Admin login',loginSub:'Authorised users only.',email:'Email',pin:'PIN',login:'Log in',cancel:'Cancel',bad:'Email or PIN is incorrect.',locked:'Too many attempts. Try again in 15 minutes.',net:'Cannot reach the server.',
   adminTitle:'Admin trends',logout:'Log out',adminSoon:'Trend dashboard comes next. Login is working.',preview:'Preview mode',live:'Live',signed:'Signed in as '},
  id:{tagline:'Komitmen untuk saling menjaga',title:'Laporkan yang Anda lihat di lokasi',sub:'Tindakan tidak aman, kondisi tidak aman, hampir terjadi, atau pemerhatian positif. Sekitar satu menit, hal kecil pun penting.',date:'Tanggal',contractor:'Kontraktor',name:'Nama Anda',location:'Lokasi',type:'Apa yang Anda laporkan?',desc:'Apa yang Anda lihat?',rec:'Rekomendasi atau tindakan yang diambil',optional:'(opsional)',risk:'Kategori kontrol risiko kritis',status:'Status',send:'Kirim laporan',sending:'Mengirim…',
-  pick:'Pilih…',skip:'Tidak ada',sublab:'Jenis pemerhatian apa?',choose:'Pilih ini',close:'Tutup',more:'Info lengkap',other:'Lainnya (ketik di bawah)',locOther:'Ketik lokasi',req:'Wajib diisi',
+  pick:'Pilih…',skip:'Tidak ada',sublab:'Jenis pemerhatian apa?',lsrQ:'Apakah Aturan Penyelamat Jiwa terlibat?',lsrWhich:'Aturan yang mana?',yes:'Ya',no:'Tidak',choose:'Pilih ini',close:'Tutup',more:'Info lengkap',other:'Lainnya (ketik di bawah)',locOther:'Ketik lokasi',req:'Wajib diisi',
   ok:'Laporan diterima. Terima kasih sudah peduli.',queued:'Tidak ada koneksi. Laporan disimpan di ponsel dan akan terkirim otomatis.',fail:'Gagal mengirim. Periksa koneksi lalu coba lagi.',
   pending:'laporan menunggu dikirim',previewOk:'Hanya pratinjau: laporan TIDAK disimpan.',
   loginTitle:'Login admin',loginSub:'Hanya untuk pengguna berwenang.',email:'Email',pin:'PIN',login:'Masuk',cancel:'Batal',bad:'Email atau PIN salah.',locked:'Terlalu banyak percobaan. Coba lagi dalam 15 menit.',net:'Tidak dapat terhubung ke server.',
@@ -248,6 +264,70 @@ function buildSeg(box,name,items,onpick){
     l.appendChild(i);l.appendChild(s);box.appendChild(l);
   });
 }
+var S='<svg viewBox="0 0 64 64" fill="none" stroke="#1b3a63" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">';
+var LSR={
+ work:{v:'Work Authorisation',en:['Work Authorisation','Work with a valid permit when required.'],id:['Otorisasi Kerja','Bekerja dengan izin kerja yang berlaku bila diperlukan.'],
+  i:S+'<rect x="14" y="12" width="36" height="46" rx="4"/><rect x="24" y="6" width="16" height="9" rx="2" fill="#f5a623"/><path d="M22 34l6 6 14-14" stroke="#25a06b" stroke-width="5"/></svg>'},
+ energy:{v:'Energy Isolation',en:['Energy Isolation','Verify isolation and zero energy before work begins.'],id:['Isolasi Energi','Pastikan isolasi dan energi nol sebelum pekerjaan dimulai.'],
+  i:S+'<path d="M37 5L17 36h13l-4 23 21-31H34z" fill="#f5a623" stroke-width="3"/></svg>'},
+ bypass:{v:'Bypassing Safety Controls',en:['Bypassing Safety Controls','Get authorisation before overriding or disabling safety controls.'],id:['Mengabaikan Kontrol Keselamatan','Dapatkan otorisasi sebelum mengabaikan atau menonaktifkan kontrol keselamatan.'],
+  i:S+'<path d="M32 6l20 8v14c0 14-9 24-20 30C21 52 12 42 12 28V14z"/><path d="M17 51L47 13" stroke="#e8603c" stroke-width="6"/></svg>'},
+ space:{v:'Confined Space',en:['Confined Space','Get authorisation before entering a confined space.'],id:['Ruang Terbatas','Dapatkan otorisasi sebelum memasuki ruang terbatas.'],
+  i:S+'<circle cx="32" cy="32" r="24"/><circle cx="32" cy="24" r="5" fill="#1b3a63"/><path d="M32 30v13M32 36l-8 5M32 36l8 5" stroke-width="3.5"/></svg>'},
+ driving:{v:'Driving',en:['Driving','Follow safe driving rules.'],id:['Berkendara','Ikuti aturan berkendara yang aman.'],
+  i:S+'<circle cx="32" cy="32" r="24"/><circle cx="32" cy="32" r="5" fill="#1b3a63"/><path d="M8 32h19M37 32h19M32 37v19"/></svg>'},
+ hot:{v:'Hot Work',en:['Hot Work','Control flammables and ignition sources.'],id:['Pekerjaan Panas','Kendalikan bahan mudah terbakar dan sumber api.'],
+  i:S+'<path d="M33 5c1 11 15 17 15 31a15 15 0 0 1-30 0c0-9 5-12 9-17 0 5 2 8 5 9-2-8-1-15 1-23z" fill="#f5a623" stroke-width="3.5"/></svg>'},
+ fire:{v:'Line of Fire',en:['Line of Fire','Keep yourself and others out of the line of fire.'],id:['Jalur Bahaya','Jauhkan diri Anda dan orang lain dari jalur bahaya.'],
+  i:S+'<circle cx="18" cy="22" r="5" fill="#1b3a63"/><path d="M18 28v15M18 43l-7 13M18 43l7 13M18 33l-8 6M18 33l8 6" stroke-width="3.5"/><rect x="40" y="6" width="17" height="17" rx="2" fill="#e8603c" stroke-width="3"/><path d="M44 30l-14 8" stroke="#e8603c" stroke-width="4" stroke-dasharray="3 5"/></svg>'},
+ lift:{v:'Safe Mechanical Lifting',en:['Safe Mechanical Lifting','Plan lifting operations and control the area.'],id:['Pengangkatan Mekanis yang Aman','Rencanakan pengangkatan dan kendalikan area.'],
+  i:S+'<path d="M8 7h40M32 7v17"/><path d="M32 24v6a5 5 0 1 1-6 5" stroke-width="3.5"/><path d="M30 38l-14 6M30 38l16 6" stroke-width="3"/><rect x="14" y="44" width="34" height="14" rx="2" fill="#f5a623" stroke-width="3"/></svg>'},
+ height:{v:'Working at Height',en:['Working at Height','Protect yourself against a fall when working at height.'],id:['Bekerja di Ketinggian','Lindungi diri dari jatuh saat bekerja di ketinggian.'],
+  i:S+'<path d="M20 5v54M44 5v54M20 16h24M20 28h24M20 40h24M20 52h24" stroke-width="3.5"/></svg>'}
+};
+var lsrYes='',lsrRule='';
+function LL(k){return LSR[k][lang==='id'?'id':'en'];}
+function lsrNeeded(){return s1==='near'||(s1==='obs'&&(s2==='ua'||s2==='uc'));}
+function mkLsrTile(k){
+  var t=document.createElement('div');t.className='tile';
+  var pic=document.createElement('button');pic.type='button';pic.className='pic';pic.setAttribute('aria-label',LL(k)[0]+' – '+tr('more'));
+  pic.innerHTML=LSR[k].i+'<span class="q" aria-hidden="true">?</span>';
+  pic.addEventListener('click',function(){openInfo('lsr:'+k);});
+  var lb=document.createElement('label');lb.className='pick';
+  var i=document.createElement('input');i.type='radio';i.name='lsrR';i.value=k;
+  i.addEventListener('change',function(){chooseRule(k);});
+  var a=document.createElement('span');a.className='tt';a.textContent=LL(k)[0];
+  lb.appendChild(i);lb.appendChild(a);t.appendChild(pic);t.appendChild(lb);return t;
+}
+function renderLsr(){
+  var box=$('lsrBox'),need=lsrNeeded();
+  box.classList.toggle('hidden',!need);
+  if(!need){lsrYes='';lsrRule='';}
+  var yn=$('lsrYN');yn.innerHTML='';
+  [['yes',tr('yes')],['no',tr('no')]].forEach(function(p){
+    var l=document.createElement('label'),i=document.createElement('input');
+    i.type='radio';i.name='lsrYN';i.value=p[0];i.checked=(lsrYes===p[0]);
+    i.addEventListener('change',function(){lsrYes=p[0];if(p[0]==='no')lsrRule='';setErr('lsr',false);renderLsr();});
+    var sp=document.createElement('span');sp.textContent=p[1];l.appendChild(i);l.appendChild(sp);yn.appendChild(l);
+  });
+  var g=$('lsrGrid');g.innerHTML='';
+  ['work','energy','bypass','space','driving','hot','fire','lift','height'].forEach(function(k){g.appendChild(mkLsrTile(k));});
+  $('lsrLab').textContent=tr('lsrWhich');
+  var show=need&&lsrYes==='yes';
+  $('lsrLab').classList.toggle('hidden',!show);g.classList.toggle('hidden',!show);
+  if(lsrRule){var e=document.querySelector('#lsrGrid input[value="'+lsrRule+'"]');if(e)e.checked=true;}
+}
+function chooseRule(k){lsrYes='yes';lsrRule=k;setErr('lsr',false);renderLsr();}
+function lsrValue(){if(!lsrNeeded())return '';if(lsrYes==='no')return 'None';if(lsrYes==='yes'&&lsrRule)return LSR[lsrRule].v;return '';}
+/* on wide screens the LSR question sits in the left column so everything fits one screen */
+var mq=window.matchMedia?window.matchMedia('(min-width:900px) and (min-height:700px)'):null;
+function placeLsr(){
+  var box=$('lsrBox'),cols=document.querySelectorAll('.grid .col');
+  if(!cols.length)return;
+  if(mq&&mq.matches)cols[0].appendChild(box);
+  else{var t=document.querySelector('[data-e="type"]');t.parentNode.insertBefore(box,t.nextSibling);}
+}
+if(mq){if(mq.addEventListener)mq.addEventListener('change',placeLsr);else if(mq.addListener)mq.addListener(placeLsr);}
 function L(k){return TILE[k][lang==='id'?'id':'en'];}
 function mkTile(k,name){
   var t=document.createElement('div');t.className='tile';
@@ -270,6 +350,7 @@ function renderTiles(){
   $('subLab').classList.toggle('hidden',s1!=='obs');t2.classList.toggle('hidden',s1!=='obs');
   if(s1){var e=document.querySelector('#t1 input[value="'+s1+'"]');if(e)e.checked=true;}
   if(s2){var f=document.querySelector('#t2 input[value="'+s2+'"]');if(f)f.checked=true;}
+  renderLsr();placeLsr();
 }
 function choose(k){
   if(k==='near'){s1='near';s2='';typeSel=TILE.near.v;}
@@ -279,8 +360,8 @@ function choose(k){
 }
 var infoKey='';
 function openInfo(k){
-  infoKey=k;var d=L(k);
-  $('inPic').innerHTML=ICON[k];$('inT').textContent=d[0];$('inD').textContent=d[1];$('inEx').textContent=d[2];
+  infoKey=k;var isL=k.indexOf('lsr:')===0;var d=isL?LL(k.slice(4)).concat(['']):L(k);
+  $('inPic').innerHTML=isL?LSR[k.slice(4)].i:ICON[k];$('inT').textContent=d[0];$('inD').textContent=d[1];$('inEx').textContent=d[2];
   $('inGo').textContent=tr('choose');$('inX').setAttribute('aria-label',tr('close'));
   $('infoModal').classList.remove('hidden');$('inX').focus();
 }
@@ -316,10 +397,10 @@ function setErr(k,on){var e=document.querySelector('[data-e="'+k+'"]');if(e)e.te
 function collect(){
   var loc=$('location').value; if(loc==='__other')loc=$('locationOther').value.trim();
   return {date:$('date').value,contractor:$('contractor').value,name:$('name').value.trim(),location:loc,type:typeSel,
-    description:$('desc').value.trim(),recommendation:$('rec').value.trim(),risk:$('risk').value,status:statusSel};
+    description:$('desc').value.trim(),recommendation:$('rec').value.trim(),risk:$('risk').value,status:statusSel,lsr:lsrValue()};
 }
 function validate(d){
-  var bad={date:!d.date,contractor:!d.contractor,name:!d.name,location:!d.location,type:!d.type,desc:!d.description,rec:!d.recommendation,risk:!d.risk,status:!d.status};
+  var bad={date:!d.date,contractor:!d.contractor,name:!d.name,location:!d.location,type:!d.type,desc:!d.description,rec:!d.recommendation,risk:!d.risk,status:!d.status,lsr:lsrNeeded()&&!d.lsr};
   var any=false;for(var k in bad){setErr(k,bad[k]);if(bad[k])any=true;}
   return !any;
 }
@@ -339,7 +420,7 @@ function flushQueue(){
   p.then(function(){setQ(left);updateQueueNote();});
 }
 function resetForm(){
-  $('f').reset();typeSel='';statusSel='';s1='';s2='';$('date').value=today();$('locationOther').classList.add('hidden');build();
+  $('f').reset();typeSel='';statusSel='';s1='';s2='';lsrYes='';lsrRule='';$('date').value=today();$('locationOther').classList.add('hidden');build();
   var keep=null;try{keep=localStorage.getItem('uauc_name');}catch(e){} if(keep)$('name').value=keep;
 }
 function onSubmit(ev){
@@ -401,7 +482,7 @@ $('location').addEventListener('change',function(){var o=$('location').value==='
 $('lf').addEventListener('submit',onLogin);
 $('inX').addEventListener('click',closeInfo);
 $('infoModal').addEventListener('click',function(e){if(e.target===$('infoModal'))closeInfo();});
-$('inGo').addEventListener('click',function(){closeInfo();choose(infoKey);});
+$('inGo').addEventListener('click',function(){closeInfo();if(infoKey.indexOf('lsr:')===0)chooseRule(infoKey.slice(4));else choose(infoKey);});
 $('lgX').addEventListener('click',closeLogin);
 $('logout').addEventListener('click',logout);
 $('lEN').addEventListener('click',function(){setLang('en');});
