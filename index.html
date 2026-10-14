@@ -19,20 +19,20 @@ header{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-c
 .lang{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
 .lang button{background:none;border:0;color:var(--mute);padding:3px 10px;font:inherit;font-size:12px;cursor:pointer}
 .lang button.on{background:var(--amber);color:#1a1200;font-weight:700}
-main{max-width:640px;margin:0 auto;padding:18px 16px 40px}
-h1{font-size:22px;margin:4px 0 4px}
-.sub{color:var(--mute);margin:0 0 18px;font-size:14px}
-label{display:block;font-weight:600;font-size:14px;margin:16px 0 6px}
+main{max-width:640px;margin:0 auto;padding:12px 14px 8px}
+h1{font-size:19px;margin:2px 0 2px}
+.sub{color:var(--mute);margin:0 0 6px;font-size:13px;line-height:1.35}
+label{display:block;font-weight:600;font-size:13px;margin:11px 0 4px}
 label i{font-style:normal;color:var(--mute);font-weight:400}
-input,select,textarea{width:100%;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:var(--r);padding:12px;font:inherit}
-textarea{min-height:96px;resize:vertical}
+input,select,textarea{width:100%;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:9px 11px;font:inherit;font-size:15px}
+textarea{min-height:70px;resize:vertical}
 input:focus,select:focus,textarea:focus,button:focus-visible{outline:2px solid var(--amber2);outline-offset:1px}
 .seg{display:grid;gap:8px}
 .seg label{margin:0;display:flex;gap:10px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:11px 12px;font-weight:500;cursor:pointer}
 .seg input{width:auto;accent-color:var(--amber)}
 .seg label:has(input:checked){border-color:var(--amber);background:var(--panel2)}
 .err{color:var(--bad);font-size:13px;min-height:0;margin-top:4px}
-.btn{display:block;width:100%;margin-top:22px;background:var(--amber);color:#1a1200;border:0;border-radius:var(--r);padding:14px;font:inherit;font-weight:700;cursor:pointer}
+.btn{display:block;width:100%;margin-top:0;background:var(--amber);color:#1a1200;border:0;border-radius:var(--r);padding:14px;font:inherit;font-weight:700;cursor:pointer}
 .btn:disabled{opacity:.6}
 .btn.ghost{background:none;color:var(--text);border:1px solid var(--line);margin-top:10px}
 .note{margin-top:14px;font-size:13px;color:var(--mute)}
@@ -47,6 +47,36 @@ footer{text-align:center;color:var(--mute);font-size:12px;padding:18px}
 .admin-bar{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .admin-bar button{width:auto;margin:0;padding:8px 14px}
 .tile{background:var(--panel);border:1px dashed var(--line);border-radius:var(--r);padding:16px;margin-top:14px;color:var(--mute)}
+
+.grid{display:block}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.row2>div{min-width:0}
+.seg{gap:6px}
+.seg label{padding:8px 10px;font-size:14px;border-radius:10px}
+.seg.two,#type{grid-template-columns:1fr 1fr}
+.seg label span{line-height:1.2}
+.sendbar{position:sticky;bottom:0;margin:12px -14px 0;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(to top,var(--bg) 70%,rgba(11,22,38,0))}
+.err{line-height:1.2}
+.err:empty{display:none}
+.note{margin:4px 0 0}
+footer{padding:6px}
+@media (min-width:900px) and (min-height:620px){
+  html,body{height:100%}
+  body{display:flex;flex-direction:column;overflow:hidden}
+  main{flex:1;min-height:0;width:100%;max-width:1180px;padding:12px 24px 0;display:flex;flex-direction:column}
+  #crew{flex:1;min-height:0;display:flex;flex-direction:column}
+  .head{display:flex;align-items:baseline;gap:14px;margin-bottom:2px}
+  .head .sub{margin:0}
+  #notice{flex:none}
+  #f{flex:1;min-height:0;display:flex;flex-direction:column}
+  .grid{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr 1.25fr;gap:26px}
+  .col{display:flex;flex-direction:column;min-height:0}
+  .col.grow textarea{flex:1;min-height:60px;resize:none}
+  .sendbar{position:static;margin:10px 0 0;padding:0;background:none;display:flex;justify-content:flex-end}
+  .sendbar .btn{width:340px}
+  #type{grid-template-columns:1fr}
+}
+@media (min-width:900px) and (max-height:619px){main{max-width:1000px}}
 </style>
 </head>
 <body>
@@ -58,40 +88,39 @@ footer{text-align:center;color:var(--mute);font-size:12px;padding:18px}
 <main>
   <!-- CREW VIEW -->
   <section id="crew">
-    <h1 data-t="title">Report what you see on site</h1>
-    <p class="sub" data-t="sub">Unsafe acts, unsafe conditions, near misses or positive observations. Takes about a minute, and small things count.</p>
+    <div class="head"><h1 data-t="title">Report what you see on site</h1>
+    <p class="sub" data-t="sub">Unsafe acts, unsafe conditions, near misses or positive observations. Takes about a minute, and small things count.</p></div>
     <div id="notice"></div>
     <form id="f" novalidate autocomplete="off">
-      <label for="date" data-t="date">Date</label>
-      <input type="date" id="date" required><div class="err" data-e="date"></div>
-
-      <label for="contractor" data-t="contractor">Contractor</label>
-      <select id="contractor" required></select><div class="err" data-e="contractor"></div>
-
-      <label for="name" data-t="name">Your name</label>
-      <input id="name" maxlength="80" required><div class="err" data-e="name"></div>
-
-      <label for="location" data-t="location">Location</label>
-      <select id="location" required></select>
-      <input id="locationOther" class="hidden" maxlength="80" style="margin-top:8px" data-ph="locOther">
-      <div class="err" data-e="location"></div>
-
-      <label data-t="type">Report type</label>
-      <div class="seg" id="type"></div><div class="err" data-e="type"></div>
-
-      <label for="desc" data-t="desc">What did you see?</label>
-      <textarea id="desc" maxlength="1500" required></textarea><div class="err" data-e="desc"></div>
-
-      <label for="rec" data-t="rec">Recommendation or action taken</label>
-      <textarea id="rec" maxlength="1500" required></textarea><div class="err" data-e="rec"></div>
-
-      <label for="risk" data-t="risk">Critical risk control category</label>
-      <select id="risk" required></select><div class="err" data-e="risk"></div>
-
-      <label data-t="status">Status</label>
-      <div class="seg" id="status"></div><div class="err" data-e="status"></div>
-
-      <button class="btn" id="send" type="submit" data-t="send">Send report</button>
+      <div class="grid">
+        <div class="col">
+          <div class="row2">
+            <div><label for="date" data-t="date">Date</label><input type="date" id="date" required><div class="err" data-e="date"></div></div>
+            <div><label for="contractor" data-t="contractor">Contractor</label><select id="contractor" required></select><div class="err" data-e="contractor"></div></div>
+          </div>
+          <label for="name" data-t="name">Your name</label>
+          <input id="name" maxlength="80" required><div class="err" data-e="name"></div>
+          <label for="location" data-t="location">Location</label>
+          <select id="location" required></select>
+          <input id="locationOther" class="hidden" maxlength="80" style="margin-top:6px" data-ph="locOther">
+          <div class="err" data-e="location"></div>
+        </div>
+        <div class="col">
+          <label data-t="type">Report type</label>
+          <div class="seg" id="type"></div><div class="err" data-e="type"></div>
+          <label for="risk" data-t="risk">Critical risk control category</label>
+          <select id="risk" required></select><div class="err" data-e="risk"></div>
+          <label data-t="status">Status</label>
+          <div class="seg two" id="status"></div><div class="err" data-e="status"></div>
+        </div>
+        <div class="col grow">
+          <label for="desc" data-t="desc">What did you see?</label>
+          <textarea id="desc" maxlength="1500" required></textarea><div class="err" data-e="desc"></div>
+          <label for="rec" data-t="rec">Recommendation or action taken</label>
+          <textarea id="rec" maxlength="1500" required></textarea><div class="err" data-e="rec"></div>
+        </div>
+      </div>
+      <div class="sendbar"><button class="btn" id="send" type="submit" data-t="send">Send report</button></div>
     </form>
     <p class="note" id="queueNote"></p>
   </section>
