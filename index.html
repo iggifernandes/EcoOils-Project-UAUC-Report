@@ -178,6 +178,29 @@ footer{padding:6px}
   .tiles.lsr .tt{font-size:12px}
   #lsrBox label{margin-top:8px}
 }
+
+/* photos */
+#photoBox{margin:14px 0 0;padding:12px;border:1px solid var(--line);border-radius:var(--r);background:var(--panel)}
+#photoBox h3,#laterModal h3{margin:0 0 2px;font-size:14px}
+.pgrp{margin-top:10px}.pgrp .pl{font-weight:700;font-size:13px;margin:0 0 4px;color:var(--amber2)}
+.pbtns{display:flex;gap:8px;flex-wrap:wrap}
+.pbtn{margin:0;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--panel2);border-radius:10px;padding:8px 12px;font-size:13px;font-weight:600;cursor:pointer}
+.pbtn input{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+.pbtn:has(input:focus-visible){outline:2px solid var(--amber2)}
+.pbtn.off{opacity:.45;pointer-events:none}
+.thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.th{position:relative;width:84px;height:84px;border-radius:10px;overflow:hidden;border:1px solid var(--line);background:#000}
+.th img{width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in}
+.th .rm{position:absolute;top:3px;right:3px;width:24px;height:24px;border-radius:50%;border:0;background:rgba(0,0,0,.7);color:#fff;font-size:16px;line-height:1;cursor:pointer}
+.sav{background:#12372b;border:1px solid var(--ok);border-radius:var(--r);padding:10px 12px;margin-top:8px;font-size:14px}
+.sav b{font-size:18px;letter-spacing:.5px;color:var(--ok)}
+.linkbtn{background:none;border:0;color:var(--amber2);text-decoration:underline;font:inherit;font-size:13px;padding:0;cursor:pointer}
+#zoomModal{padding:0;background:rgba(0,0,0,.94);flex-direction:column;align-items:stretch;justify-content:flex-start}
+#zStage{flex:1;overflow:hidden;touch-action:none;display:flex;align-items:center;justify-content:center;cursor:grab;user-select:none}
+#zImg{max-width:100%;max-height:100%;transform-origin:center center;will-change:transform;-webkit-user-drag:none;pointer-events:none}
+#zBar{display:flex;gap:8px;align-items:center;justify-content:center;padding:10px;background:var(--panel);border-top:1px solid var(--line)}
+#zBar button{min-width:44px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:#fff;font-size:20px;cursor:pointer;padding:0 12px}
+#zPct{min-width:48px;text-align:center;font-size:13px;color:var(--mute)}
 </style>
 </head>
 <body>
@@ -208,7 +231,7 @@ footer{padding:6px}
         </div>
         <div class="col">
           <label data-t="type">What are you reporting?</label>
-          <div id="typeBox"><div class="tiles two" id="t1"></div><div class="sublab hidden" id="subLab"></div><div class="tiles three hidden" id="t2"></div></div><div class="err" data-e="type"></div>
+          <div id="typeBox"><div class="tiles two" id="t1"></div><div class="sublab hidden" id="subLab"></div><div class="tiles three hidden" id="t2"></div><div class="sublab hidden" id="nmLab"></div><div class="seg two hidden" id="nmKind"></div></div><div class="err" data-e="type"></div><div class="err" data-e="nm"></div>
           <div id="lsrBox" class="hidden"><label data-t="lsrQ">Is a Life-Saving Rule involved?</label><div class="seg two" id="lsrYN"></div><div class="sublab hidden" id="lsrLab"></div><div class="tiles three lsr hidden" id="lsrGrid"></div><div class="err" data-e="lsr"></div></div>
           <label for="risk" data-t="risk">Critical risk control category</label>
           <select id="risk" required></select><div class="note hidden" id="riskHint" data-t="riskHint">Filled from the Life-Saving Rule. Change it if needed.</div><div class="err" data-e="risk"></div>
@@ -222,9 +245,19 @@ footer{padding:6px}
           <textarea id="rec" maxlength="1500" required></textarea><div class="err" data-e="rec"></div>
         </div>
       </div>
+      <div id="photoBox" class="hidden">
+        <div class="note hidden" id="photoAct" style="margin:0"></div>
+        <div id="photoIn">
+          <h3 data-t="pTitle">Photos (optional)</h3>
+          <div class="sub" style="margin:0" data-t="pHint">Up to 3 photos each. Tap a photo to zoom.</div>
+          <div class="pgrp"><div class="pl" data-t="pBefore">Before</div><div id="boxB"></div></div>
+          <div class="pgrp"><div class="pl" data-t="pAfter">After</div><div id="boxA"></div></div>
+        </div>
+      </div>
       <div class="sendbar"><button class="btn" id="send" type="submit" data-t="send">Send report</button></div>
     </form>
     <p class="note" id="queueNote"></p>
+    <p class="note hidden" id="laterRow"><button type="button" class="linkbtn" id="laterBtn" data-t="addLater">Add photos to an existing report</button></p>
   </section>
 
   <!-- ADMIN VIEW (placeholder until trends are built) -->
@@ -239,6 +272,25 @@ footer{padding:6px}
 <footer><span id="modeTxt"></span></footer>
 
 <!-- INFO POPUP -->
+<div class="modal hidden" id="laterModal" role="dialog" aria-modal="true" aria-labelledby="lmT">
+  <div class="card" style="max-width:420px;max-height:92vh;overflow:auto">
+    <button class="xbtn" id="lmX" type="button" aria-label="Close">&times;</button>
+    <h2 id="lmT" data-t="lmTitle">Add photos to a report</h2>
+    <label for="lmSerial" data-t="lmSerial">Serial number</label>
+    <input id="lmSerial" placeholder="UAUC-0001" maxlength="14" autocapitalize="characters" autocomplete="off">
+    <button class="btn" id="lmFind" type="button" style="margin-top:10px" data-t="lmFind">Find report</button>
+    <div class="note" id="lmInfo"></div>
+    <div id="lmWrap" class="hidden">
+      <div class="pgrp"><div class="pl" data-t="pBefore">Before</div><div id="lmB"></div></div>
+      <div class="pgrp"><div class="pl" data-t="pAfter">After</div><div id="lmA"></div></div>
+      <button class="btn" id="lmSend" type="button" style="margin-top:12px" data-t="lmUpload">Upload photos</button>
+    </div>
+  </div>
+</div>
+<div class="modal hidden" id="zoomModal" role="dialog" aria-modal="true" aria-label="Photo">
+  <div id="zStage"><img id="zImg" alt=""></div>
+  <div id="zBar"><button id="zOut" type="button" aria-label="Zoom out">&minus;</button><span id="zPct">100%</span><button id="zIn" type="button" aria-label="Zoom in">+</button><button id="zReset" type="button" data-t="zReset">Reset</button><button id="zClose" type="button" aria-label="Close">&times;</button></div>
+</div>
 <div class="modal hidden" id="infoModal" role="dialog" aria-modal="true" aria-labelledby="inT">
   <div class="card" style="max-width:340px;text-align:center">
     <button class="xbtn" id="inX" type="button" aria-label="Close">&times;</button>
@@ -270,8 +322,11 @@ footer{padding:6px}
 (function(){
 'use strict';
 /* ====== CONFIG ====== */
-var VERSION='v1.9';
+var VERSION='v1.10';
 // Paste your Apps Script Web App URL here after deploying Code.gs. Leave empty for preview mode.
+// Photos backend (separate Apps Script). Leave PHOTO_API empty to switch the photo feature off.
+var PHOTO_API='';
+var PHOTO_KEY='e23d9a534c6c42aca279c3d0';
 var API_URL='https://script.google.com/macros/s/AKfycbyPefMdoOjN_lqN3euGeMK2hxlyQIg5uUsEn44WQyyFsJT8OHte-tAo7JxYZwH6pW3UBw/exec';
 var PREVIEW_PIN='demo';          // preview mode only. Real PIN lives in Apps Script, never in this file.
 
@@ -313,12 +368,24 @@ var T={
 };
 Object.assign(T.en,{"ty_near": "Near Miss", "ty_ua": "Unsafe Act", "ty_uc": "Unsafe Condition", "ty_pos": "Positive", "ty_obs": "Observation (old)", "ty_inc": "Incident (old)", "d30": "30 days", "d90": "90 days", "d365": "12 months", "dAll": "All time", "dCon": "Contractor", "dAllCon": "All contractors", "dRefresh": "Refresh", "dLoading": "Loading data…", "dErr": "Could not load the data. Check the deployment and try Refresh.", "dExpired": "Session expired. Please log in again.", "dNone": "Not specified", "dNoData": "No data for this selection.", "dTotal": "Reports", "dOpen": "Open", "dClosedPct": "Closed / handled", "dAssess": "Assessment", "dMonthly": "Reports per month", "dByCon": "By contractor", "dUAUC": "UA + UC", "dRisk": "Top critical risk categories (UA, UC, Near Miss)", "dLoc": "Hotspot locations (UA, UC, Near Miss)", "dLsr": "Life-Saving Rules", "dLsrNote": "LSR answers recorded for {n} of {t} UA, UC and Near Miss reports. Reports before the LSR question was added have no LSR answer.", "dReview": "Open items review", "dReviewSub": "Most serious first, then oldest. Tick the items that are already fixed and close them together.", "dAllTypes": "All types", "dAllAges": "Any age", "dA30": "Older than 30 days", "dA90": "Older than 90 days", "dA180": "Older than 180 days", "dA365": "Older than 1 year", "dSelShown": "Select the {n} shown", "dSelPos": "Select all {n} open Positive reports", "dClear": "Clear selection", "dShowing": "Showing {a} of {b} open items.", "dDays": "days open", "dAction": "Action", "dSelected": "{n} selected", "dCloseSel": "Close selected ({n})", "dConfirm": "Mark {n} items as Closed? This updates the Google Sheet.", "dMore": "Show 40 more", "dSelOld": "Select all {n} open items older than 6 months", "dNoteLbl": "Justification saved with each closed item", "dNeedNote": "Please write a justification first.", "dNoteOld": "Reviewed by HSSE Manager and treated as an observation. Action completed. Closed (item older than 6 months).", "dNotePos": "Positive observation. No action required.", "dCmtTitle": "Closing comment (used when you close)", "dCmtFree": "Extra comment (optional, NA = none)", "dCloseOne": "Close with comment", "dCloseThis": "Close this item", "dReopenT": "Closed in bulk with the earlier wording", "dReopenD": "{n} items were closed with the earlier standard note. Re-open them, then review and close each with your own comment.", "dReopenB": "Re-open these {n} items", "dReopenC": "Re-open {n} items? They return to Open and the closure note is cleared.", "remember": "Keep me signed in on this computer", "keptOn": "kept signed in on this computer", "dSaving": "Saving…", "dClosedN": "{n} items closed.", "aOpen": "{n} reports are still Open ({p}% of this selection). {o} of them are older than 6 months and need a decision: close, or act.", "aCon": "Most open items sit with {c} ({p}% of all open).", "aPos": "{n} open items are Positive reports. Nothing needs fixing, so they can be closed together now.", "aHi": "{n} open items are Near Miss, Unsafe Act or Unsafe Condition. Review these first.", "aRatio": "Unsafe Conditions ({uc}) outnumber Unsafe Acts ({ua}). The environment and equipment need more attention than behaviour.", "aRisk": "Most reported critical risk categories: {r}.", "aTrend": "Last 30 days: {a} reports, against {b} in the 30 days before.", "aLsr": "{n} UA/UC/Near Miss reports have an LSR answer, of which {t} involve a Life-Saving Rule.", "aLsr0": "No LSR answers yet. They will appear as crews submit reports with the new LSR question."});
 Object.assign(T.id,{"ty_near": "Hampir Terjadi", "ty_ua": "Tindakan Tidak Aman", "ty_uc": "Kondisi Tidak Aman", "ty_pos": "Positif", "ty_obs": "Pemerhatian (lama)", "ty_inc": "Kejadian (lama)", "d30": "30 hari", "d90": "90 hari", "d365": "12 bulan", "dAll": "Semua", "dCon": "Kontraktor", "dAllCon": "Semua kontraktor", "dRefresh": "Segarkan", "dLoading": "Memuat data…", "dErr": "Data tidak dapat dimuat. Periksa deployment lalu coba Segarkan.", "dExpired": "Sesi habis. Silakan masuk lagi.", "dNone": "Tidak disebutkan", "dNoData": "Tidak ada data untuk pilihan ini.", "dTotal": "Laporan", "dOpen": "Buka", "dClosedPct": "Tutup / ditangani", "dAssess": "Penilaian", "dMonthly": "Laporan per bulan", "dByCon": "Per kontraktor", "dUAUC": "UA + UC", "dRisk": "Kategori risiko kritis teratas (UA, UC, Hampir Terjadi)", "dLoc": "Lokasi rawan (UA, UC, Hampir Terjadi)", "dLsr": "Aturan Penyelamat Jiwa", "dLsrNote": "Jawaban LSR tercatat untuk {n} dari {t} laporan UA, UC dan Hampir Terjadi. Laporan sebelum pertanyaan LSR ditambahkan tidak memiliki jawaban LSR.", "dReview": "Tinjauan item terbuka", "dReviewSub": "Paling serius dulu, lalu paling lama. Centang item yang sudah selesai dan tutup bersamaan.", "dAllTypes": "Semua jenis", "dAllAges": "Semua usia", "dA30": "Lebih dari 30 hari", "dA90": "Lebih dari 90 hari", "dA180": "Lebih dari 180 hari", "dA365": "Lebih dari 1 tahun", "dSelShown": "Pilih {n} yang tampil", "dSelPos": "Pilih semua {n} laporan Positif yang terbuka", "dClear": "Hapus pilihan", "dShowing": "Menampilkan {a} dari {b} item terbuka.", "dDays": "hari terbuka", "dAction": "Tindakan", "dSelected": "{n} dipilih", "dCloseSel": "Tutup yang dipilih ({n})", "dConfirm": "Tandai {n} item sebagai Tutup? Ini memperbarui Google Sheet.", "dMore": "Tampilkan 40 lagi", "dSelOld": "Pilih semua {n} item terbuka yang lebih dari 6 bulan", "dNoteLbl": "Alasan yang disimpan pada setiap item yang ditutup", "dNeedNote": "Tulis alasan terlebih dahulu.", "dNoteOld": "Ditinjau Manajer HSSE dan diperlakukan sebagai pemerhatian. Tindakan telah selesai. Ditutup (item lebih dari 6 bulan).", "dNotePos": "Pemerhatian positif. Tidak perlu tindakan.", "dCmtTitle": "Komentar penutupan (dipakai saat menutup)", "dCmtFree": "Komentar tambahan (opsional, NA = tidak ada)", "dCloseOne": "Tutup dengan komentar", "dCloseThis": "Tutup item ini", "dReopenT": "Ditutup massal dengan kalimat sebelumnya", "dReopenD": "{n} item ditutup dengan catatan standar sebelumnya. Buka kembali, lalu tinjau dan tutup satu per satu dengan komentar Anda.", "dReopenB": "Buka kembali {n} item ini", "dReopenC": "Buka kembali {n} item? Item kembali ke Buka dan catatan penutupan dihapus.", "remember": "Biarkan saya tetap masuk di komputer ini", "keptOn": "tetap masuk di komputer ini", "dSaving": "Menyimpan…", "dClosedN": "{n} item ditutup.", "aOpen": "{n} laporan masih Buka ({p}% dari pilihan ini). {o} di antaranya lebih dari 6 bulan dan perlu keputusan: tutup, atau tindak lanjuti.", "aCon": "Item terbuka terbanyak ada pada {c} ({p}% dari semua yang terbuka).", "aPos": "{n} item terbuka adalah laporan Positif. Tidak ada yang perlu diperbaiki, jadi bisa langsung ditutup bersamaan.", "aHi": "{n} item terbuka adalah Hampir Terjadi, Tindakan Tidak Aman atau Kondisi Tidak Aman. Tinjau ini lebih dulu.", "aRatio": "Kondisi Tidak Aman ({uc}) lebih banyak daripada Tindakan Tidak Aman ({ua}). Lingkungan dan peralatan perlu perhatian lebih daripada perilaku.", "aRisk": "Kategori risiko kritis yang paling banyak dilaporkan: {r}.", "aTrend": "30 hari terakhir: {a} laporan, dibanding {b} pada 30 hari sebelumnya.", "aLsr": "{n} laporan UA/UC/Hampir Terjadi memiliki jawaban LSR, dan {t} di antaranya melibatkan Aturan Penyelamat Jiwa.", "aLsr0": "Belum ada jawaban LSR. Akan muncul saat kru mengirim laporan dengan pertanyaan LSR yang baru."});
+Object.assign(T.en,{pTitle:'Photos (optional)',pHint:'Up to 3 photos each. Tap a photo to zoom.',pBefore:'Before',pAfter:'After',pTake:'Take photo',pGal:'From gallery',
+ pAct:'Intervene first. Stop the work and speak to the person before reporting. No photo is needed for an unsafe act.',
+ nmLab:'Was it an unsafe act or an unsafe condition?',nmAct:'Unsafe act',nmCond:'Unsafe condition',
+ serialIs:'Serial number',serialTip:'Note this number. You can add photos later with it.',pUp:'Uploading photos',pDone:'Photos uploaded',pFail:'Some photos did not upload.',pRetry:'Retry photos',
+ pNoNet:'Photos need a connection. Remove the photos to send the report now, or try again with signal.',pQueuedNote:'The report is saved and will send when you have signal. Photos were not sent. Add them later with the serial number.',
+ addLater:'Add photos to an existing report',lmTitle:'Add photos to a report',lmSerial:'Serial number',lmFind:'Find report',lmNone:'Serial number not found.',lmUpload:'Upload photos',lmFull:'This report already has 3 photos of this kind.',zReset:'Reset',pTooBig:'That photo could not be read.'});
+Object.assign(T.id,{pTitle:'Foto (opsional)',pHint:'Maksimal 3 foto per bagian. Ketuk foto untuk memperbesar.',pBefore:'Sebelum',pAfter:'Sesudah',pTake:'Ambil foto',pGal:'Dari galeri',
+ pAct:'Intervensi dahulu. Hentikan pekerjaan dan bicara dengan orangnya sebelum melapor. Tidak perlu foto untuk tindakan tidak aman.',
+ nmLab:'Apakah tindakan tidak aman atau kondisi tidak aman?',nmAct:'Tindakan tidak aman',nmCond:'Kondisi tidak aman',
+ serialIs:'Nomor seri',serialTip:'Catat nomor ini. Anda dapat menambah foto nanti dengan nomor ini.',pUp:'Mengunggah foto',pDone:'Foto terunggah',pFail:'Sebagian foto gagal diunggah.',pRetry:'Coba lagi',
+ pNoNet:'Foto memerlukan koneksi. Hapus foto untuk mengirim laporan sekarang, atau coba lagi saat ada sinyal.',pQueuedNote:'Laporan tersimpan dan akan terkirim saat ada sinyal. Foto belum terkirim. Tambahkan nanti dengan nomor seri.',
+ addLater:'Tambah foto ke laporan yang ada',lmTitle:'Tambah foto ke laporan',lmSerial:'Nomor seri',lmFind:'Cari laporan',lmNone:'Nomor seri tidak ditemukan.',lmUpload:'Unggah foto',lmFull:'Laporan ini sudah memiliki 3 foto jenis ini.',zReset:'Atur ulang',pTooBig:'Foto tidak dapat dibaca.'});
 var lang='en';
 try{lang=localStorage.getItem('uauc_lang')||(/^id/i.test(navigator.language||'')?'id':'en');}catch(e){}
 function tr(k){return (T[lang]&&T[lang][k])||T.en[k]||k;}
 
 var $=function(id){return document.getElementById(id);};
-var typeSel='',statusSel='',s1='',s2='';
+var typeSel='',statusSel='',s1='',s2='',nmSel='';
 
 function opt(v,t){var o=document.createElement('option');o.value=v;o.textContent=t;return o;}
 function buildSeg(box,name,items,onpick){
@@ -429,12 +496,12 @@ function renderTiles(){
   $('subLab').classList.toggle('hidden',s1!=='obs');t2.classList.toggle('hidden',s1!=='obs');
   if(s1){var e=document.querySelector('#t1 input[value="'+s1+'"]');if(e)e.checked=true;}
   if(s2){var f=document.querySelector('#t2 input[value="'+s2+'"]');if(f)f.checked=true;}
-  renderLsr();placeLsr();
+  renderNm();renderLsr();placeLsr();photoVis();
 }
 function choose(k){
   if(k==='near'){s1='near';s2='';typeSel=TILE.near.v;}
-  else if(k==='obs'){s1='obs';s2='';typeSel='';}
-  else{s1='obs';s2=k;typeSel=TILE[k].v;}
+  else if(k==='obs'){s1='obs';s2='';typeSel='';nmSel='';}
+  else{s1='obs';s2=k;typeSel=TILE[k].v;nmSel='';}
   setErr('type',false);renderTiles();
 }
 var infoKey='';
@@ -476,10 +543,10 @@ function setErr(k,on){var e=document.querySelector('[data-e="'+k+'"]');if(e)e.te
 function collect(){
   var loc=$('location').value; if(loc==='__other')loc=$('locationOther').value.trim();
   return {date:$('date').value,contractor:$('contractor').value,name:$('name').value.trim(),location:loc,type:typeSel,
-    description:$('desc').value.trim(),recommendation:$('rec').value.trim(),risk:$('risk').value,status:statusSel,lsr:lsrValue()};
+    description:$('desc').value.trim(),recommendation:$('rec').value.trim(),risk:$('risk').value,status:statusSel,lsr:lsrValue(),nearMissKind:(s1==='near'?nmSel:'')};
 }
 function validate(d){
-  var bad={date:!d.date,contractor:!d.contractor,name:!d.name,location:!d.location,type:!d.type,desc:!d.description,rec:!d.recommendation,risk:!d.risk,status:!d.status,lsr:lsrNeeded()&&!d.lsr};
+  var bad={date:!d.date,contractor:!d.contractor,name:!d.name,location:!d.location,type:!d.type,desc:!d.description,rec:!d.recommendation,risk:!d.risk,status:!d.status,lsr:lsrNeeded()&&!d.lsr,nm:PHOTO_API&&s1==='near'&&!nmSel};
   var any=false;for(var k in bad){setErr(k,bad[k]);if(bad[k])any=true;}
   return !any;
 }
@@ -495,10 +562,14 @@ function updateQueueNote(){var n=getQ().length;$('queueNote').textContent=n?(n+'
 function flushQueue(){
   if(!API_URL)return;var q=getQ();if(!q.length)return;
   var p=Promise.resolve(),left=[];
-  q.forEach(function(item){p=p.then(function(){return post(item).then(function(r){if(!r||!r.ok)left.push(item);}).catch(function(){left.push(item);});});});
+  q.forEach(function(item){p=p.then(function(){
+    var pre=(PHOTO_API&&!item.serial)?registerSerial(item).then(function(sr){if(sr)item.serial=sr;}).catch(function(){}):Promise.resolve();
+    return pre.then(function(){return post(item);}).then(function(r){if(!r||!r.ok)left.push(item);}).catch(function(){left.push(item);});
+  });});
   p.then(function(){setQ(left);updateQueueNote();});
 }
 function resetForm(){
+  nmSel='';clearPhotos();
   $('f').reset();typeSel='';statusSel='';s1='';s2='';lsrYes='';lsrRule='';riskAuto=false;$('riskHint').classList.add('hidden');$('date').value=today();$('locationOther').classList.add('hidden');build();
   var keep=null;try{keep=localStorage.getItem('uauc_name');}catch(e){} if(keep)$('name').value=keep;
 }
@@ -506,16 +577,228 @@ function onSubmit(ev){
   ev.preventDefault();
   var d=collect();if(!validate(d))return;
   d.action='submit';d.id=uuid();
+  var ph=photosAllowed()?{B:BOX.B.items.slice(),A:BOX.A.items.slice()}:{B:[],A:[]};
+  var hasPh=ph.B.length+ph.A.length>0;
   try{localStorage.setItem('uauc_name',d.name);}catch(e){}
   var btn=$('send');btn.disabled=true;btn.textContent=tr('sending');
   var done=function(kind,msg){btn.disabled=false;btn.textContent=tr('send');notice(kind,msg);};
   if(!API_URL){resetForm();return done('warn',tr('previewOk'));}
-  post(d).then(function(r){
-    if(r&&r.ok){resetForm();done('ok',tr('ok'));}
-    else{done('warn',tr('fail'));}
-  }).catch(function(){
-    var q=getQ();q.push(d);setQ(q);updateQueueNote();resetForm();done('warn',tr('queued'));
+  var getS=PHOTO_API?registerSerial(d).catch(function(){return '';}):Promise.resolve('');
+  getS.then(function(serial){
+    if(!serial&&hasPh&&PHOTO_API){return done('warn',tr('pNoNet'));}
+    if(serial)d.serial=serial;
+    return post(d).then(function(r){
+      if(!(r&&r.ok)){return done('warn',tr('fail'));}
+      var kept=ph;resetForm();
+      if(!hasPh){btn.disabled=false;btn.textContent=tr('send');return showResult(serial,null);}
+      btn.textContent=tr('pUp');
+      return uploadAll(serial,kept,{B:0,A:0},function(i,n){btn.textContent=tr('pUp')+' '+i+'/'+n;}).then(function(res){
+        btn.disabled=false;btn.textContent=tr('send');showResult(serial,res);
+      });
+    }).catch(function(){
+      var q=getQ();q.push(d);setQ(q);updateQueueNote();resetForm();
+      btn.disabled=false;btn.textContent=tr('send');
+      notice('warn',tr('queued')+(hasPh?' '+tr('pQueuedNote'):''));
+    });
   });
+}
+
+/* ====== PHOTOS ====== */
+var MAXP=3;
+function photosAllowed(){
+  if(!PHOTO_API)return false;
+  return s2==='uc'||s2==='pos'||(s1==='near'&&nmSel==='condition');
+}
+function isAct(){return s2==='ua'||(s1==='near'&&nmSel==='act');}
+function photoVis(){
+  var on=!!PHOTO_API;
+  $('laterRow').classList.toggle('hidden',!on);
+  var allowed=photosAllowed(),act=on&&isAct();
+  $('photoBox').classList.toggle('hidden',!(allowed||act));
+  $('photoIn').classList.toggle('hidden',!allowed);
+  $('photoAct').classList.toggle('hidden',!act);
+  $('photoAct').textContent=act?tr('pAct'):'';
+}
+function renderNm(){
+  var on=!!PHOTO_API&&s1==='near';
+  $('nmLab').textContent=tr('nmLab');
+  $('nmLab').classList.toggle('hidden',!on);$('nmKind').classList.toggle('hidden',!on);
+  if(!on){$('nmKind').innerHTML='';return;}
+  buildSeg($('nmKind'),'nm',[['act',tr('nmAct'),tr('nmAct')],['condition',tr('nmCond'),tr('nmCond')]],function(v){nmSel=v;setErr('nm',false);photoVis();});
+  if(nmSel){var e=document.querySelector('#nmKind input[value="'+nmSel+'"]');if(e)e.checked=true;}
+}
+function shrink(file){
+  return new Promise(function(res,rej){
+    var u=URL.createObjectURL(file),im=new Image();
+    im.onload=function(){
+      var m=1280,w=im.naturalWidth,h=im.naturalHeight,k=Math.min(1,m/Math.max(w,h)),c=document.createElement('canvas');
+      c.width=Math.max(1,Math.round(w*k));c.height=Math.max(1,Math.round(h*k));
+      c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);
+      c.toBlob(function(b){b?res(b):rej();},'image/jpeg',0.72);
+    };
+    im.onerror=function(){URL.revokeObjectURL(u);rej();};
+    im.src=u;
+  });
+}
+function toB64(blob){
+  return new Promise(function(res,rej){var r=new FileReader();r.onload=function(){res(String(r.result).split(',')[1]||'');};r.onerror=rej;r.readAsDataURL(blob);});
+}
+function makeBox(host,kind){
+  var box={kind:kind,items:[],max:MAXP};
+  host.innerHTML='<div class="pbtns"><label class="pbtn"><input type="file" accept="image/*" capture="environment"><span data-t="pTake"></span></label><label class="pbtn"><input type="file" accept="image/*" multiple><span data-t="pGal"></span></label></div><div class="thumbs"></div>';
+  var ins=host.querySelectorAll('input'),th=host.querySelector('.thumbs'),btns=host.querySelectorAll('.pbtn');
+  function draw(){
+    th.innerHTML='';
+    box.items.forEach(function(it,i){
+      var d=document.createElement('div');d.className='th';
+      var im=document.createElement('img');im.src=it.url;im.alt='';im.addEventListener('click',function(){openZoom(it.url);});
+      var x=document.createElement('button');x.type='button';x.className='rm';x.innerHTML='&times;';x.setAttribute('aria-label','Remove');
+      x.addEventListener('click',function(){URL.revokeObjectURL(it.url);box.items.splice(i,1);draw();});
+      d.appendChild(im);d.appendChild(x);th.appendChild(d);
+    });
+    var full=box.items.length>=box.max;
+    btns.forEach(function(b){b.classList.toggle('off',full);});
+  }
+  function add(files){
+    var room=box.max-box.items.length,list=Array.prototype.slice.call(files,0,Math.max(room,0));
+    list.reduce(function(p,f){return p.then(function(){return shrink(f).then(function(b){box.items.push({blob:b,url:URL.createObjectURL(b)});draw();}).catch(function(){notice('warn',tr('pTooBig'));});});},Promise.resolve());
+  }
+  ins.forEach(function(i){i.addEventListener('change',function(){add(i.files);i.value='';});});
+  box.clear=function(){box.items.forEach(function(it){URL.revokeObjectURL(it.url);});box.items=[];draw();};
+  box.redraw=draw;draw();
+  return box;
+}
+var BOX={},LBOX={};
+function clearPhotos(){if(BOX.B){BOX.B.clear();BOX.A.clear();}}
+
+function postP(body){
+  body.key=PHOTO_KEY;
+  return fetch(PHOTO_API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body),redirect:'follow'}).then(function(r){return r.json();});
+}
+function typeLabel(d){return (d.type||'')+(d.nearMissKind==='act'?' (unsafe act)':d.nearMissKind==='condition'?' (unsafe condition)':'');}
+function registerSerial(d){
+  return postP({action:'serial',reportId:d.id,type:typeLabel(d),contractor:d.contractor,location:d.location,reporter:d.name}).then(function(r){
+    if(r&&r.ok&&r.serial)return r.serial;throw new Error('serial');
+  });
+}
+function uploadOne(serial,kind,n,blob){
+  return toB64(blob).then(function(b64){return postP({action:'photo',serial:serial,kind:kind,n:n,mime:'image/jpeg',data:b64});}).then(function(r){return !!(r&&r.ok);}).catch(function(){return false;});
+}
+/* groups: {B:[items],A:[items]}  start: {B:0,A:0} (photos already stored) */
+function uploadAll(serial,groups,start,progress){
+  var jobs=[];
+  ['B','A'].forEach(function(k){groups[k].forEach(function(it,i){jobs.push({kind:k,n:(start[k]||0)+i+1,blob:it.blob});});});
+  var failed=[],ok=0,p=Promise.resolve();
+  jobs.forEach(function(j,idx){p=p.then(function(){
+    if(progress)progress(idx+1,jobs.length);
+    return uploadOne(serial,j.kind,j.n,j.blob).then(function(g){if(g)ok++;else failed.push(j);});
+  });});
+  return p.then(function(){return {ok:ok,total:jobs.length,failed:failed};});
+}
+function showResult(serial,res){
+  var n=$('notice');n.innerHTML='';
+  var b=document.createElement('div');b.className='banner ok';b.textContent=tr('ok');n.appendChild(b);
+  if(serial){
+    var s=document.createElement('div');s.className='sav';
+    s.innerHTML=tr('serialIs')+': <b></b><div class="note" style="margin:4px 0 0"></div>';
+    s.querySelector('b').textContent=serial;s.querySelector('.note').textContent=tr('serialTip');b.appendChild(s);
+  }
+  if(res){
+    var m=document.createElement('div');m.className='note';m.style.color='#eaf0f7';
+    m.textContent=(res.failed.length?tr('pFail')+' ':tr('pDone')+' ')+res.ok+'/'+res.total;b.appendChild(m);
+    if(res.failed.length){
+      var rb=document.createElement('button');rb.type='button';rb.className='btn ghost';rb.textContent=tr('pRetry');
+      rb.addEventListener('click',function(){
+        rb.disabled=true;
+        var g={B:[],A:[]},st={B:0,A:0};
+        uploadFailed(serial,res.failed,function(r2){showResult(serial,{ok:res.ok+r2.ok,total:res.total,failed:r2.failed});});
+      });
+      b.appendChild(rb);
+    }
+  }
+  window.scrollTo(0,0);
+}
+function uploadFailed(serial,failed,cb){
+  var ok=0,left=[],p=Promise.resolve();
+  failed.forEach(function(j){p=p.then(function(){return uploadOne(serial,j.kind,j.n,j.blob).then(function(g){if(g)ok++;else left.push(j);});});});
+  p.then(function(){cb({ok:ok,failed:left});});
+}
+
+/* ----- zoom viewer ----- */
+var Z={s:1,x:0,y:0,pts:{},d0:0,s0:1,lastTap:0};
+function zApply(){
+  if(Z.s<=1){Z.x=0;Z.y=0;}
+  $('zImg').style.transform='translate('+Z.x+'px,'+Z.y+'px) scale('+Z.s+')';
+  $('zPct').textContent=Math.round(Z.s*100)+'%';
+}
+function zSet(s){Z.s=Math.min(6,Math.max(1,s));zApply();}
+function openZoom(url){$('zImg').src=url;Z.s=1;Z.x=0;Z.y=0;Z.pts={};zApply();$('zoomModal').classList.remove('hidden');}
+function closeZoom(){$('zoomModal').classList.add('hidden');$('zImg').removeAttribute('src');}
+function initZoom(){
+  var st=$('zStage');
+  $('zIn').addEventListener('click',function(){zSet(Z.s*1.35);});
+  $('zOut').addEventListener('click',function(){zSet(Z.s/1.35);});
+  $('zReset').addEventListener('click',function(){zSet(1);});
+  $('zClose').addEventListener('click',closeZoom);
+  st.addEventListener('wheel',function(e){e.preventDefault();zSet(Z.s*(e.deltaY<0?1.15:1/1.15));},{passive:false});
+  st.addEventListener('dblclick',function(){zSet(Z.s>1?1:2.5);});
+  function dist(){var k=Object.keys(Z.pts);if(k.length<2)return 0;var a=Z.pts[k[0]],b=Z.pts[k[1]];return Math.hypot(a.x-b.x,a.y-b.y);}
+  st.addEventListener('pointerdown',function(e){
+    try{st.setPointerCapture(e.pointerId);}catch(x){}
+    Z.pts[e.pointerId]={x:e.clientX,y:e.clientY,px:e.clientX,py:e.clientY};
+    if(Object.keys(Z.pts).length===2){Z.d0=dist();Z.s0=Z.s;}
+    var now=Date.now();if(Object.keys(Z.pts).length===1){if(now-Z.lastTap<300)zSet(Z.s>1?1:2.5);Z.lastTap=now;}
+  });
+  st.addEventListener('pointermove',function(e){
+    var p=Z.pts[e.pointerId];if(!p)return;
+    var n=Object.keys(Z.pts).length;
+    if(n>=2){p.x=e.clientX;p.y=e.clientY;if(Z.d0)zSet(Z.s0*dist()/Z.d0);}
+    else if(Z.s>1){Z.x+=e.clientX-p.x;Z.y+=e.clientY-p.y;p.x=e.clientX;p.y=e.clientY;zApply();}
+  });
+  function up(e){delete Z.pts[e.pointerId];Z.d0=0;}
+  st.addEventListener('pointerup',up);st.addEventListener('pointercancel',up);
+  document.addEventListener('keydown',function(e){
+    if($('zoomModal').classList.contains('hidden'))return;
+    if(e.key==='Escape')closeZoom();else if(e.key==='+'||e.key==='=')zSet(Z.s*1.35);else if(e.key==='-')zSet(Z.s/1.35);
+  });
+}
+
+/* ----- add photos to an existing report ----- */
+var LM={serial:'',b:0,a:0};
+function openLater(){
+  $('lmInfo').textContent='';$('lmWrap').classList.add('hidden');$('lmSerial').value='';
+  LBOX.B.clear();LBOX.A.clear();$('laterModal').classList.remove('hidden');$('lmSerial').focus();
+}
+function closeLater(){$('laterModal').classList.add('hidden');LBOX.B.clear();LBOX.A.clear();}
+function lmFind(){
+  var sr=$('lmSerial').value.trim().toUpperCase();if(!sr)return;
+  $('lmInfo').textContent='…';$('lmWrap').classList.add('hidden');
+  postP({action:'lookup',serial:sr}).then(function(r){
+    if(!(r&&r.ok&&r.found)){$('lmInfo').textContent=tr('lmNone');return;}
+    LM={serial:r.serial,b:Number(r.before)||0,a:Number(r.after)||0};
+    $('lmInfo').textContent=r.serial+' · '+r.type+' · '+tr('pBefore')+' '+LM.b+' · '+tr('pAfter')+' '+LM.a;
+    LBOX.B.max=Math.max(0,MAXP-LM.b);LBOX.A.max=Math.max(0,MAXP-LM.a);LBOX.B.redraw();LBOX.A.redraw();
+    $('lmWrap').classList.remove('hidden');
+  }).catch(function(){$('lmInfo').textContent=tr('net');});
+}
+function lmSend(){
+  var g={B:LBOX.B.items.slice(),A:LBOX.A.items.slice()};
+  if(!g.B.length&&!g.A.length)return;
+  var b=$('lmSend');b.disabled=true;
+  uploadAll(LM.serial,g,{B:LM.b,A:LM.a},function(i,n){b.textContent=tr('pUp')+' '+i+'/'+n;}).then(function(res){
+    b.disabled=false;b.textContent=tr('lmUpload');
+    $('lmInfo').textContent=(res.failed.length?tr('pFail')+' ':tr('pDone')+' ')+res.ok+'/'+res.total;
+    LBOX.B.clear();LBOX.A.clear();
+    if(!res.failed.length){setTimeout(closeLater,1500);}
+  });
+}
+function initPhotos(){
+  BOX.B=makeBox($('boxB'),'B');BOX.A=makeBox($('boxA'),'A');
+  LBOX.B=makeBox($('lmB'),'B');LBOX.A=makeBox($('lmA'),'A');
+  initZoom();
+  $('laterBtn').addEventListener('click',openLater);$('lmX').addEventListener('click',closeLater);
+  $('lmFind').addEventListener('click',lmFind);$('lmSend').addEventListener('click',lmSend);
+  $('lmSerial').addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();lmFind();}});
 }
 
 /* ====== ADMIN LOGIN ====== */
@@ -868,7 +1151,7 @@ window.addEventListener('online',flushQueue);
 
 $('date').value=today();
 try{var nm=localStorage.getItem('uauc_name');if(nm)$('name').value=nm;}catch(e){}
-applyLang();flushQueue();
+initPhotos();applyLang();flushQueue();
 if(location.hash==='#admin')openLogin();
 })();
 </script>
