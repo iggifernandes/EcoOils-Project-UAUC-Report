@@ -202,12 +202,15 @@ footer{padding:6px}
 #zBar button{min-width:44px;height:40px;border-radius:10px;border:1px solid var(--line);background:var(--panel2);color:#fff;font-size:20px;cursor:pointer;padding:0 12px}
 #zPct{min-width:48px;text-align:center;font-size:13px;color:var(--mute)}
 .en{white-space:pre-wrap;font-size:13px;color:var(--muted,#6b7a89);border-left:3px solid #4aa3ff;padding:4px 8px;margin:6px 0}.fixwrap{display:inline-flex;align-items:center;gap:6px;margin:6px 0}.fixbtn{padding:4px 10px}
+.rrow{display:flex;align-items:center;gap:8px}.stbtn{background:none;border:1px solid var(--line);border-radius:999px;color:var(--amber2);width:30px;height:26px;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+.stRow{display:grid;grid-template-columns:64px 1fr 34px;gap:8px;align-items:center;margin:8px 0;font-size:14px}.stBar{display:flex;height:18px;border-radius:5px;overflow:hidden;background:var(--panel2)}.stBar i{display:block;height:100%}.stNum{text-align:right;font-weight:700}
+.stMon{display:flex;align-items:center;justify-content:center;gap:14px;margin:6px 0 10px}.stMon button{width:34px;height:34px;border-radius:50%;border:1px solid var(--line);background:var(--panel2);color:#fff;font-size:18px;cursor:pointer}.stMon button:disabled{opacity:.35}.stLeg{display:flex;gap:14px;justify-content:center;font-size:13px;color:var(--mute);margin-top:10px}.stLeg b{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}
 </style>
 </head>
 <body>
 <header>
   <div class="brand"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAPUAAAAwCAMAAAD+SsxQAAABIFBMVEXbriiysApdk3EynGpOeGLdsV7uyRsmaVnyySY5jGcldS3bzWd3exJNn3lHkW9//HxHoHfovCVLsoRspZawp23///8WNS47lW3wxiTxvQ48mHBVVaqzsK0AAP9zc++kcHCspvH20RTOzpXPo5EPdP9///8A/3+4cQCgaKtqAB9yof+s5Rn/AP8AAFUAqqp/AH+qAFWZzGb/VQD/f//vvwrPvVQAAABFpHj9yAT//wBDnnX+0wL4xQ5EmXRFm3T1xRH+qgBGl3NVqlXzwxR9fn7xwhbsuxZJlXL7vQLswygAf39ImHQA///vvQ8A/wAziGRPlHPuwxg8fnX/fwDquhbowy9VqqrZuC7luylPiXD/AAAweVpIjG5JrIA+nXNVVVWex+ipAAAAYHRSTlMXBBQRDw8XE5RdBA8GnVwC0U7+GgYBBpxtk80DBgEDBQXiCAoCAgIDBQMFBAEGAwIDBQMCyVUA/PkB9f7Qss+wA3EDjgJyT1AGTwKPAW8BMy9OCgIvMwMTLhIBFyz97ANbkoYHAAANTUlEQVR42t2ad3fiSBLAQYjgADY2OOxNntm8l+8K5QAiCDDGYDDGsP7+3+KqqlvJYWfevf2LnnkYSS3oX1cukYPdHLk7/qNDbvDS1Z1kzsNVFzyCHlyW8BXHfKepGdGDjpXXdTy40u4YWN9lWa/zJGKi1m7BW+s5S/OIGjU9lyLP7Zigr64IToeO6cLcg56mkYZ7cGXl4HBnqXvaFTIStUbCdU2UuY7QuAn/gp2lRpVGaQ9Qw7UuwK2mETVat3aj53fWrj0ScheY2rqjV+2WFECTCj6f7xo1KjKGrBsEvYI58d7kLZY1SbyDG7L29F2T9YBIvEO96CJjj0Rudlb4VsvliL0EjLyqsyfP7YpB37mdHurwALqEuuqaqNW0Adon3ADN/RFTtFzP1cJdokYW5LS6iMOitTqmSciaaV3Rnxs8f2VpZlcE7Z3RcMZmbvqLO9AJF4tFvetqJit4DzfD7MBgt+wa80/yYMSNfG74S3Rh0UHaHCu7e6frO+bD9Tm5MBSoa5kXXwCU/mg08mto66GFpzQOZfOdi9e6/lZgowsHxW61Wtttq+X4h1AU0Cso5Qc6jh2hnnsE4w2EtEMAv4XALcPAl5azgQYqvbX4c3KzYLk8ai6XQepUeyaP2svshT9tjNvLZnM5a49fvtwllwWjlhgG/29tIIfJWXHVu+leXV5WFkg9zoxv//phCj+zrG+sgZ85o28a7eT728nH1V3XsizX7XTqrpVHSWeHo0BXBG/S/4uS/n/L+hFg49s4/A0f8Cj3/RpiT2Dm1/xa/08XNO60yl866qt4uIyoFxcVhMIQjf8uQCERO1Xfr1UNgW17DUvEb80lRc89bDbXGxzTzXR6Pd3sf6t2w7UdqZG9gcmETp7RKR+CIVzjmxPn76+I+r8HT84cZov+18aEDPaEB35rjUSfaFYx7FB+ot2RfttTcfJein0qUjbNQpvX15Dz0ebj0XIe0pr7+miyFhnSbozR2YQEsUeHhgL7cE2n7WDy4s3vPt4+Uej5e7f3deoJPNgnrWN7NLId3NSWQwJn76EPuI4shi7W0YdOC7WsSZ7lCGDqEPUILRszl4uGMKVc1gaMb6Me0n4a0T1Gazt6HKLJic9SoCCpH19JmbkCypy6xZzxx69/q9MaTdmJqJu+3TrZOn4BD46WM+JTqZQMQ+gjdEEa/aQMKmE7UProkpwHXGU/pZ69TN1uL/FfYtPVrRDysWNQiEBsQG5i3ToPzcc/op7jtmu5TM9yDpeYIee/alTnx6S4R8rRrySwqX98cnI82pzx1U219hhwXbW3B4Xkrn24J428L1UuwlWOC1L9GbUqqB8LaDCFmdyBoJlx1gGpMg3/VFVP5QfU6GL/mCyqOcxSB7PZrD1JBBtSnyMl7Ll+ixnV1zW8fH4PM7n1QRtdmeIfk6Lbo9qo6vhAPgmRVDUTUwqkgsaUmklYhV2t3sSydvrReJD+GRWmnIoWGx+zu43EnpS/YwOWHgMthzzCbIKGpyoq+vCI+i/xh5GIokJYtDZSls0ZtBt81arL+wTGcYp8X4Dcan90jPrVMqrTVwP8ROG1ysiFiXrpTlI/DUq1keM4tl+m6FuI3bWzR9hLKeo+KHjUVGEqBA/fJwaYUA/hjBJisZ2C8dLUuKcXnxho3OL5JidOXTATvQDZw2RGUsf4M32f7O4LlmFvHfXAkvHa1Co5SV1u77d5iDVHQQlRjv4W6bM4HjbHZRauHWUMBeDpzgzKe8hXU9PUR3DtyFuHIsroAetaTk96XVwC38K3JSo8/Saa3JYxu/26E16Cf2KTMyENR+s+AF1Qf3eWlnTNiCmryLSXNnxfOGic0Z9I6va4xi5hA2V0bSeYCLVj6nZyt6Fy2qYDd7OwQvCirIz7AGlqTKk9PZu24Rnp/zydZK1j1BWjkW80yGtIk6HiYp3n2+fiFK3B1+taeFAsRnm4oE6Sk6MMZRUEgNOfTvu20GsRoIz7yNsP2UvShpR/p6n3CXUwmRlRhHPEDTrtuoXeK9Aj2YkE4ibZhrj5l01h9TlEGt5LJC+3IhMSniSxe5hDXKJB/wh6fpDXY2+Wzrl4lcYIOX2k3rdx2bbKGRRhOyrGaoP/Rm65uX8uVL7wu5gQU+/DOSeE6HO2LVVSo8PuUndeYOnzHCaL3aTPgWdLYRiuIqJcsXgA71d8hjOMz+gXboosN9ygn1b1sI4R6a54wBkfzS6G4aIIxdViIWLXXo0V3LRu5c7JyOU4x8f4f4oL5nVK/zytcW6JCV07CAqgkuD6aMbMGI/vIUOdkvWk7IjkH5SaLVIBD2408yakXq18ENdD4gMKXZ7MWIS3ddl2i1DH0nHFNuCW4JAf4pCFahUWcI+vWJ0GTUMXV8QLZDEY/xeI+YY+4/Awz3GLesY/w/PcrCYVmrKbYByQ4Z63YsfV5grOHkpnNkzcxTlLHx6eUC9h/zu+vaDEkVAnhb75hAtbiYeNeYRcFJG6sV4LX8WNPnwhPz+AuqmJ3he1v9Yl6H7kqx9RN+a5y8gxu+ziBpj3mZZFVcgCqTXrkzSOriY+VcOY50XUhkjGyWjPRdoqsptgWHDYYgX1pI8Hx/ek84gSZKiNF6nPiLrln8FEiU0Ut71Ey+hQ9OEHEy51O6w7LEL4UHPDRehyN9/LC9l2FouQ2mE0oUJvKpUQGSkG0uQObwtTW3x/5wKY+kBQ9zQLc3Qr0vKUrDGz3PZF2WT0x+0o30cQoyCC4RAKBDOV1M3EXQjrpclGVsP3RdhykHsmHrXCAQKWUCYaP37T37q03KZL0smv2f66PDPkGTmm5jNFeQt5s4W0Fe75UnffktSk3Z0ot2dqjBFX/PAD3lBB+hG//FDKekSjWsXgQ8JB/zyWHQJyy8a1kOtYGO50JEJ87M3GKFGmfmrXQVt4PtKQvvhIrD2QujEXj9+wUqK1/ZNbP7fgcSx2aaWeLmaITK6IVUNJzMkPdH5Wp8/1tcufMfD0AaxS1AsoeXNBjTXWIV+jUMli/1y6e+7DKQOhenMig5KkHqapxUZdJ5FrJiOXCHIp6kMoOFvRyaGEB+hBFOfcJVqKdYfUzMYaT8siya/eFz83GsXPK5z4lqm5RNOJNiS3zbkZOmOP90OXdhNpuCmyvFjW6D1u2OMNdIxbeipeO+VZGUsETKWZGonGWQ2PZM0aPmWMPsRZCkd4o/8sXgcYNRQ76mDxDcJlw69ymetbTtMGtLCOFJUVDYIim2SRCzcYUfconPMneTLGXyXUjSw1/mds9iO4W0m8jnMz1vA475rAjAxTHpZFAqMIY7Wjeq4gXfgMZs+oaff6MiVl/8c6zKpNzqYkFX0OJFhc9IAdcjzQjv+QWuusPRnkb2Jq980TaqRdWCaZxzyTm8XUS2GIEdEw4Bx7JMQ646zM3pfZWw1L0XZ7FqWseyB9uJqmBsy+VeJmNzcWD5hJl/XfUNghOa8cd6jRu/5b1CGV1MjpX6PWJXX4B9R4+e7CNStrL0tdPmof0VBiBCKiVfuisChgljJ+EGHsB2HHhuwG9g2ZoUpZKxnqYKlgyuqIGePoRxNzjlFmBwEoW6HknOIZarhpvU2nk3lBnX9OzR8QVeVpDXdPn1Hz6+eDNaSojXSlWea4JIn29oBJZSJGeoBGXhBNM8o0cdiRs5oJs2dZF2JqMWyxHUidj91NUdR+izVR/8ShC+sx9GrkwbHagN6KLOFF6jrkPVIMdIjzp97sJWruoKSeAgiHbMsxKkMtIRpR9eGLTDqqPsgVB4G9Tfpmwmh/OxqmNFxQP2Lib/vTjVqjVJbshMIIuZu1pIgSU1b8EvpyEbkGuleiVXcxF8tQ1yNZeyVB2uXJIrmJqD8k1A3QX2q5ZzPSrfEAmR56FWZcfiR0yg9s4nYUkISDxvJkf/LMrocz2DuJK80pejNPqCXJ53DNFeaK1zUg3B7mJJS9dN7JxMOkmPYCNU2FUokTGVF93VraC7I2//NXWL9UckvqqDOM1MtIf+mliocFJuTDLXqkJodo1ebmqGwN2wXu/T/zZvupsnVELjwfh19ZYoodgCgs55nE7fZ6HXo6mZ8nGu4lGo5C7HUrRf59leb26r10RprR8ODlVsXzzvDjkJp+cTmCK1eq8coVmZrgqx9POva5oZah5nd4r38i092RrDMvTbMrakpulsqqmn5Fw66J2UT1Ybp3bNfyBjICsw6YZ3CuRbP1D524+uiaZlR9SOoSvv30KvVxLGn21kOSpF91DMcZTWfc3Ydp1cFBHblh0sJS++JsXxWPPibs+bY2xesykdqPk/E9TTKcqJk3h4plLWQTGGVlyR/84RotqyMegyxEpWldvOddqFtWKH4Je2FZKyw959xxwgSFeiWhqDQrn8KPOK0IOdeqBGv+RDQRt/GKhqtKapwqj9EjtPeKEgPScaDg/UephxlUTfwjUH6Wb7l+n56enm5oYx5OacjT99RV/CEqxn/5Ej/n0RdhIosvH+LuyEEYhosPsoXy9qd38UOTd9Fv6cL6gnqT6P6/LHDyAZYWb8T97z7E3uvg4NMrrbT/ARs/z9LLnbtUAAAAAElFTkSuQmCC" alt="EcoOils Mentari" width="123" height="24"><span class="ttl">UA/UC Report – Jaga Bersama</span></div>
-  <div class="right"><span id="ver">v1.17</span><div class="lang" role="group" aria-label="Language"><button id="lEN" class="on" type="button">EN</button><button id="lID" type="button">BI</button></div></div>
+  <div class="right"><span id="ver">v1.19</span><div class="rrow"><button id="stBtn" class="stbtn" type="button" aria-label="Monthly numbers"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><rect x="3" y="12" width="4" height="9" rx="1" fill="currentColor"/><rect x="10" y="6" width="4" height="15" rx="1" fill="currentColor"/><rect x="17" y="3" width="4" height="18" rx="1" fill="currentColor"/></svg></button><div class="lang" role="group" aria-label="Language"><button id="lEN" class="on" type="button">EN</button><button id="lID" type="button">BI</button></div></div></div>
 </header>
 
 <main>
@@ -303,6 +306,16 @@ footer{padding:6px}
   </div>
 </div>
 
+<div class="modal hidden" id="stModal" role="dialog" aria-modal="true" aria-labelledby="stT">
+  <div class="card" style="max-width:420px">
+    <button class="xbtn" id="stX" type="button" aria-label="Close">&times;</button>
+    <h2 id="stT"></h2>
+    <div class="stMon"><button id="stPrev" type="button" aria-label="Previous">&lsaquo;</button><b id="stMonth"></b><button id="stNext" type="button" aria-label="Next">&rsaquo;</button></div>
+    <div id="stBody"></div>
+    <div class="stLeg"><span><b style="background:#f5a623"></b><span id="stLa"></span></span><span><b style="background:#4aa3ff"></b><span id="stLc"></span></span></div>
+  </div>
+</div>
+
 <!-- LOGIN MODAL -->
 <div class="modal hidden" id="loginModal" role="dialog" aria-modal="true" aria-labelledby="lgT">
   <form class="card" id="lf" autocomplete="off">
@@ -321,7 +334,7 @@ footer{padding:6px}
 (function(){
 'use strict';
 /* ====== CONFIG ====== */
-var VERSION='v1.18';
+var VERSION='v1.19';
 // Paste your Apps Script Web App URL here after deploying Code.gs. Leave empty for preview mode.
 // Photos backend (separate Apps Script). Leave PHOTO_API empty to switch the photo feature off.
 var PHOTO_API='';
@@ -1181,6 +1194,42 @@ window.addEventListener('online',flushQueue);
 $('date').value=today();
 try{var nm=localStorage.getItem('uauc_name');if(nm)$('name').value=nm;}catch(e){}
 initPhotos();applyLang();flushQueue();
+
+/* ====== MONTHLY NUMBERS (public, counts only) ====== */
+Object.assign(T.en,{stT:'UA / UC reports',stA:'Unsafe Act',stC:'Unsafe Condition',stNone:'No reports in this month.',stErr:'Could not load the numbers.',stLoad:'Loading…',stTot:'Total'});
+Object.assign(T.id,{stT:'Laporan UA / UC',stA:'Tindakan Tidak Aman',stC:'Kondisi Tidak Aman',stNone:'Belum ada laporan di bulan ini.',stErr:'Gagal memuat angka.',stLoad:'Memuat…',stTot:'Total'});
+var ST={data:null,m:null,err:false};
+function ymNow(){var d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2);}
+function ymShift(m,n){var y=+m.slice(0,4),k=+m.slice(5,7)-1+n;y+=Math.floor(k/12);k=((k%12)+12)%12;return y+'-'+('0'+(k+1)).slice(-2);}
+function ymLabel(m){var N=lang==='id'?['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember']:['January','February','March','April','May','June','July','August','September','October','November','December'];return N[+m.slice(5,7)-1]+' '+m.slice(0,4);}
+function stDraw(){
+  var m=ST.m,b=$('stBody');b.innerHTML='';
+  $('stT').textContent=tr('stT');$('stMonth').textContent=ymLabel(m);$('stLa').textContent=tr('stA');$('stLc').textContent=tr('stC');
+  $('stNext').disabled=(m>=ymNow());$('stPrev').disabled=(m<=ymShift(ymNow(),-23));
+  if(ST.err){b.appendChild(el('p','dmsg bad',tr('stErr')));return;}
+  if(!ST.data){b.appendChild(el('p','dmsg',tr('stLoad')));return;}
+  var cur=ST.data[m]||{},names=['PBS','KKS','GSB','WEN','EcoOils'];
+  Object.keys(cur).forEach(function(k){if(names.indexOf(k)<0)names.push(k);});
+  var rows=names.map(function(n){var v=cur[n]||[0,0];return{n:n,a:v[0],c:v[1],t:v[0]+v[1]};});
+  var mx=Math.max.apply(null,rows.map(function(r){return r.t;}).concat([1])),all=0;rows.forEach(function(r){all+=r.t;});
+  if(!all){b.appendChild(el('p','dmsg',tr('stNone')));return;}
+  rows.forEach(function(r){
+    var row=el('div','stRow');row.appendChild(el('span','',r.n));
+    var bar=el('div','stBar');var a=el('i');a.style.width=(r.a/mx*100)+'%';a.style.background='#f5a623';var c=el('i');c.style.width=(r.c/mx*100)+'%';c.style.background='#4aa3ff';bar.appendChild(a);bar.appendChild(c);
+    bar.title=tr('stA')+': '+r.a+' · '+tr('stC')+': '+r.c;row.appendChild(bar);row.appendChild(el('span','stNum',String(r.t)));b.appendChild(row);});
+  var tot=el('div','stRow');tot.appendChild(el('span','',tr('stTot')));tot.appendChild(el('span'));tot.appendChild(el('span','stNum',String(all)));tot.style.borderTop='1px solid var(--line)';tot.style.paddingTop='8px';b.appendChild(tot);
+}
+function stOpen(){
+  ST.m=ST.m||ymNow();$('stModal').classList.remove('hidden');ST.err=false;stDraw();
+  if(ST.data)return;
+  if(!API_URL){ST.err=true;stDraw();return;}
+  post({action:'stats'}).then(function(r){if(!r||!r.ok)throw 0;ST.data=r.data||{};stDraw();}).catch(function(){ST.err=true;stDraw();});
+}
+$('stBtn').addEventListener('click',stOpen);
+$('stX').addEventListener('click',function(){$('stModal').classList.add('hidden');});
+$('stModal').addEventListener('click',function(e){if(e.target===$('stModal'))$('stModal').classList.add('hidden');});
+$('stPrev').addEventListener('click',function(){ST.m=ymShift(ST.m,-1);stDraw();});
+$('stNext').addEventListener('click',function(){if(ST.m<ymNow()){ST.m=ymShift(ST.m,1);stDraw();}});
 if(location.hash==='#admin')openLogin();
 })();
 </script>
